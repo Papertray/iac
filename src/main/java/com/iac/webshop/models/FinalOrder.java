@@ -1,17 +1,20 @@
 package com.iac.webshop.models;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
-public class Order {
-
+public class FinalOrder {
     @Id
-    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
 
-    public Order() {
+    private Date date;
+
+    @Column(nullable = false)
+    private double totalPrice;
+
+    public FinalOrder() {
     }
 
 }

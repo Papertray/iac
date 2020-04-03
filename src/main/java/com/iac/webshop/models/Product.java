@@ -1,12 +1,13 @@
 package com.iac.webshop.models;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 @Entity
-public class Product {
+public class Product implements Serializable {
 
     @Id
-    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -18,11 +19,12 @@ public class Product {
 
     private String description;
 
-    // Implement one-to-many spring style
-    // private List<???> categories;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Category> categories;
 
     // Implement image storage
     private Long image;
+
 
     public Product() {
     }

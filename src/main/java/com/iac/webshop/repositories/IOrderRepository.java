@@ -1,9 +1,9 @@
 package com.iac.webshop.repositories;
 
-import com.iac.webshop.models.Order;
+import com.iac.webshop.models.OrderLine;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IOrderRepository extends JpaRepository<Order, Long> {
+public interface IOrderRepository extends JpaRepository<OrderLine, Long> {
 
 
 }

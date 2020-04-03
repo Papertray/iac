@@ -6,18 +6,18 @@ import javax.persistence.*;
 public class Customer {
 
     @Id
-    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String name;
+
+    private String email;
+
+    private String phone;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Address address;
 
     public Customer() {
     }
-
-    public Customer(String name) {
-        this.name = name;
-    }
-
-
-    // standard getters and setters
 }
