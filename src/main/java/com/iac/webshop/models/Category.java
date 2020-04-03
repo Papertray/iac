@@ -9,7 +9,7 @@ public class Category implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -17,7 +17,7 @@ public class Category implements Serializable {
     private String description;
 
     // Implement image storage
-    private Long image;
+    private long image;
 
     // INFO: Only add mappedBy on one side of the relation, use the attribute name not the table name
     // cascade = CascadeType.ALL

@@ -1,22 +1,32 @@
 package com.iac.webshop.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity
 public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     private Date date;
 
-    private int amount;
+    private BigDecimal amount;
 
     @Column(nullable = false)
-    private double totalPrice;
+    private BigDecimal totalPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FinalOrder finalOrder;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Product product;
 
     public OrderLine() {
     }
 
+    public BigDecimal getPrice() {
+        return product.getPrice().multiply(amount);
+    }
 }
