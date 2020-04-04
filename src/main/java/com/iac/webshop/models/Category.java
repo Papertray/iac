@@ -1,13 +1,13 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "products"})
+// @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "products"})
 public class Category implements Serializable {
 
     @Id
@@ -52,6 +52,7 @@ public class Category implements Serializable {
         this.image = image;
     }
 
+    @JsonManagedReference
     public Set<Product> getProducts() {
         return products;
     }

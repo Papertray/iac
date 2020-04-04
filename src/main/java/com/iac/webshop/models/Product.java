@@ -1,5 +1,7 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.xml.bind.ValidationException;
 import java.io.Serializable;
@@ -14,6 +16,8 @@ public class Product implements Serializable {
     private long id;
 
     private BigDecimal minimumPrice = BigDecimal.ZERO;
+
+    private int supply;
 
     @Column(nullable = false)
     private String name;
@@ -84,6 +88,7 @@ public class Product implements Serializable {
         this.image = image;
     }
 
+    @JsonBackReference
     public Category getCategory() {
         return category;
     }
