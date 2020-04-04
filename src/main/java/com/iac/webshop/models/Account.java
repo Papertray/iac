@@ -1,9 +1,6 @@
 package com.iac.webshop.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
@@ -14,6 +11,12 @@ public class Account {
     private long id;
 
     private Date createdOn;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     private boolean isActive;
 
