@@ -9,5 +9,5 @@ public interface IProductService {
 
     void addProduct(Product product);
 
-    Product getProductById(String id);
+    Product getProductById(long id);
 }

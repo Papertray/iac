@@ -1,10 +1,13 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "products"})
 public class Category implements Serializable {
 
     @Id
@@ -19,11 +22,41 @@ public class Category implements Serializable {
     // Implement image storage
     private long image;
 
-    // INFO: Only add mappedBy on one side of the relation, use the attribute name not the table name
-    // cascade = CascadeType.ALL
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<Product> products;
 
+    public String getName() {
+        return name;
+    }
+
     public Category() {
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public long getImage() {
+        return image;
+    }
+
+    public void setImage(long image) {
+        this.image = image;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

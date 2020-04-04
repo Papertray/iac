@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Entity
 public class Product implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -27,8 +26,8 @@ public class Product implements Serializable {
     // Implement image storage
     private long image;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Category> categories;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Category category;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private Set<OrderLine> orderLines;
@@ -83,5 +82,13 @@ public class Product implements Serializable {
 
     public void setImage(long image) {
         this.image = image;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

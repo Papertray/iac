@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "default.category.id",
+      "type": "java.lang.String",
+      "description": "Description for default.category.id."
+    }
+  ]
+}
