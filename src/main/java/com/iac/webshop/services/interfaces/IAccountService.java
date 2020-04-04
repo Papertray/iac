@@ -6,4 +6,6 @@ public interface IAccountService {
     Account createAccount(Account account);
 
     Account login(String email, String password);
+
+    Account getAccountById(long id);
 }
