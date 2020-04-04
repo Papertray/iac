@@ -16,8 +16,7 @@ public class AccountService implements IAccountService {
     IAccountRepository accountRepository;
 
     @Override
-    public Account createAccount(Account account) {
-        return accountRepository.save(account);
+    public void createAccount(Account account) { accountRepository.save(account);
     }
 
     @Override
