@@ -38,7 +38,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProductById(long id) {
-        Optional<Product> products = productRepository.findById(id);
-        return products.isEmpty() ? null : products.get();
+        Optional<Product> product = productRepository.findById(id);
+        return product.isEmpty() ? null : product.get();
     }
 }

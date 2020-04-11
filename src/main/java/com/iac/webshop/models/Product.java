@@ -5,6 +5,7 @@ import javax.xml.bind.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -39,15 +40,21 @@ public class Product implements Serializable {
     }
 
     public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Optional<BigDecimal> getDiscountPrice()  {
+        if (discounts == null) {
+            return Optional.empty();
+        }
         // Get discount price
         Date date = new Date();
         for (Discount discount : discounts) {
             if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
-                return discount.getDiscountPrice();
+                return Optional.of(discount.getDiscountPrice());
             }
         }
-
-        return price;
+        return Optional.empty();
     }
 
     public void setPrice(BigDecimal price) throws ValidationException {
