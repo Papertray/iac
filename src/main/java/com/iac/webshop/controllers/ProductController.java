@@ -13,14 +13,19 @@ public class ProductController {
     @Autowired
     IProductService productService;
 
-    @PostMapping("product")
+    @PostMapping("products")
     public Product addProduct(@RequestBody Product product) {
         return productService.addProduct(product);
     }
 
-    @GetMapping("product/{id}")
+    @GetMapping("products/{id}")
     public Product getProduct(@PathVariable long id) {
         return productService.getProductById(id);
+    }
+
+    @PutMapping("products/{id}")
+    public Product updateProduct(@RequestBody Product product, @PathVariable long id) {
+        return productService.updateProduct(product, id);
     }
 
     @GetMapping("products")

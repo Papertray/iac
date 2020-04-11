@@ -98,4 +98,16 @@ public class Product implements Serializable {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public void copyFrom(Product product) {
+        setName(product.getName());
+        try {
+            setPrice(product.getPrice());
+        } catch (ValidationException e) {
+            // TODO: Figure out how to pass this error to response body
+            e.printStackTrace();
+        }
+        setDescription(product.getDescription());
+        setImage(product.getImage());
+    }
 }

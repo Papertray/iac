@@ -1,6 +1,7 @@
 package com.iac.webshop.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,11 +23,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final HttpServerErrorException handleValidationException(ValidationException ex) {
         return new HttpServerErrorException(HttpStatus.BAD_REQUEST, ex.toString());
     }
-
-//    @ExceptionHandler(NotFoundException.class)
-//    public final HttpServerErrorException handleNotFoundException(NotFoundException ex) {
-//        return new HttpServerErrorException(HttpStatus.NOT_FOUND, ex.toString());
-//    }
 
     @ResponseBody
     @ExceptionHandler(NotFoundException.class)

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +41,15 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public Product updateProduct(Product product, long id) {
+        return productRepository.findById(id)
+                .map(existingProduct -> { existingProduct.copyFrom(product);
+                    return productRepository.save(existingProduct);
+                }).orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    @Override
     public Product getProductById(long id) {
-        productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-        Optional<Product> product = productRepository.findById(id);
-        return product.isEmpty() ? null : product.get();
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
     }
 }
