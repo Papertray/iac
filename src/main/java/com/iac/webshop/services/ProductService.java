@@ -30,10 +30,10 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void addProduct(Product product) {
+    public Product addProduct(Product product) {
         Optional<Category> category = categoryRepository.findById(defaultCategoryId);
         category.ifPresent(product::setCategory);
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 
     @Override
