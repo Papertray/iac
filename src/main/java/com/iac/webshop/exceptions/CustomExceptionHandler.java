@@ -19,15 +19,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
     }
 
+    @ResponseBody
     @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public final HttpServerErrorException handleValidationException(ValidationException ex) {
         return new HttpServerErrorException(HttpStatus.BAD_REQUEST, ex.toString());
     }
 
     @ResponseBody
+    @ExceptionHandler(AccountNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String AccountNotFoundHandler(AccountNotFoundException ex) {
+       return ex.getMessage();
+    }
+
+    @ResponseBody
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String handleNotFoundException(NotFoundException ex) {
+    public String handleNotFoundException(NotFoundException ex) {
         return ex.getMessage();
     }
 }
