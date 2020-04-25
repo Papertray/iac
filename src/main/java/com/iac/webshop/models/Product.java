@@ -61,13 +61,7 @@ public class Product implements Serializable {
         return Optional.empty();
     }
 
-    public void setPrice(BigDecimal price) throws ValidationException {
-        if (price.scale() != 2) {
-            throw new ValidationException("Two numbers after decimal expected");
-        }
-        if (price.compareTo(minimumPrice) < 0) {
-            throw new ValidationException("Price lower than minimum price");
-        }
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -104,14 +98,21 @@ public class Product implements Serializable {
         this.category = category;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public BigDecimal getMinimumPrice() {
+        return minimumPrice;
+    }
+
     public void copyFrom(Product product) {
         setName(product.getName());
-        try {
-            setPrice(product.getPrice());
-        } catch (ValidationException e) {
-            // TODO: Figure out how to pass this error to response body
-            e.printStackTrace();
-        }
+        setPrice(product.getPrice());
         setDescription(product.getDescription());
         setImage(product.getImage());
     }
