@@ -1,11 +1,11 @@
 package com.iac.webshop.controllers;
 
+import com.iac.webshop.models.Account;
+import com.iac.webshop.models.Address;
 import com.iac.webshop.models.Customer;
 import com.iac.webshop.services.interfaces.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,4 +20,9 @@ public class CustomerController {
         return customerService.getCustomers();
     }
 
+    @GetMapping("/customer/{id}")
+    public Customer getCostumerByID(@PathVariable long id) { return customerService.getCustomerById(id);}
+
+    @PostMapping("/customer")
+    public void setCustomer(@RequestBody Customer customer) {customerService.createCustomer(customer);}
 }

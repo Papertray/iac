@@ -1,5 +1,6 @@
 package com.iac.webshop.controllers;
 
+import com.iac.webshop.exceptions.AccountNotFoundException;
 import com.iac.webshop.models.Account;
 import com.iac.webshop.services.interfaces.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,12 @@ public class AccountController {
     @Autowired
     IAccountService accountService;
 
-    @PostMapping("/account")
-    public void createAccount(@RequestBody Account account) { accountService.createAccount(account);
+    @PostMapping("/accounts")
+    public void createAccount(@RequestBody Account account) {
+        accountService.createAccount(account);
     }
 
-    @GetMapping("/account/{id}")
+    @GetMapping("/accounts/{id}")
     public Account getAccount(@PathVariable long id) {
         return accountService.getAccountById(id);
     }
