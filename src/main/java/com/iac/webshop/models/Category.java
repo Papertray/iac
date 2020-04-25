@@ -1,14 +1,19 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import com.iac.webshop.helpers.ImageProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.*;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 // @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "products"})
 public class Category implements Serializable {
+    @Transient
+    private ImageProvider imageProvider;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,8 +24,8 @@ public class Category implements Serializable {
 
     private String description;
 
-    // Implement image storage
-    private long image;
+    @Transient
+    private String image;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<Product> products;
@@ -44,12 +49,12 @@ public class Category implements Serializable {
         this.description = description;
     }
 
-    public long getImage() {
-        return image;
+    public BufferedImage getImage() {
+        return imageProvider.ReadImage("Categories", String.valueOf(id));
     }
 
-    public void setImage(long image) {
-        this.image = image;
+    public void setImage(String image) {
+        imageProvider.decoder(image, "Category/"+String.valueOf(id));
     }
 
     @JsonManagedReference
@@ -60,4 +65,6 @@ public class Category implements Serializable {
     public void setProducts(Set<Product> products) {
         this.products = products;
     }
+
+
 }
