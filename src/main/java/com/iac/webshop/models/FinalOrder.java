@@ -1,5 +1,7 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -15,8 +17,11 @@ public class FinalOrder {
 
     @Column(nullable = false)
     private BigDecimal totalPrice;
+
     @OneToMany(mappedBy = "finalOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<OrderLine> orderLines;
+
+    private boolean finished;
 
     private BigDecimal getPrice() {
         BigDecimal allPrices = BigDecimal.ZERO;
@@ -30,4 +35,12 @@ public class FinalOrder {
     public FinalOrder() {
     }
 
+    @JsonManagedReference
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
+    public void setOrderLines(Set<OrderLine> orderLines) {
+        this.orderLines = orderLines;
+    }
 }
