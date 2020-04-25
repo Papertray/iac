@@ -7,4 +7,7 @@ import java.util.List;
 public interface ICustomerService {
     List<Customer> getCustomers();
 
+    Customer getCustomerById(long id);
+
+    void createCustomer(Customer customer);
 }
