@@ -1,14 +1,14 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+        import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.*;
-import javax.xml.bind.ValidationException;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
+        import javax.persistence.*;
+        import javax.validation.ValidationException;
+        import java.io.Serializable;
+        import java.math.BigDecimal;
+        import java.util.Date;
+        import java.util.Optional;
+        import java.util.Set;
 
 @Entity
 public class Product implements Serializable {
@@ -115,5 +115,30 @@ public class Product implements Serializable {
         setPrice(product.getPrice());
         setDescription(product.getDescription());
         setImage(product.getImage());
+    }
+
+    // Validation
+
+    public void validate() {
+        validateName();
+        validatePrice();
+    }
+
+    public void validateName() throws ValidationException {
+
+        if (name.isEmpty()) {
+            throw new ValidationException("Name can not be empty");
+        }
+    }
+
+    public void validatePrice() throws ValidationException {
+
+        if (price.scale() != 2) {
+            throw new ValidationException("Price must have two decimals");
+        }
+
+        if (price.compareTo(minimumPrice) < 0) {
+            throw new ValidationException("Price was lower than minimum price");
+        }
     }
 }
