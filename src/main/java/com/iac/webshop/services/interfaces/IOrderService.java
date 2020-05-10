@@ -6,7 +6,7 @@ import com.iac.webshop.models.OrderLine;
 public interface IOrderService {
     FinalOrder createShoppingCart(FinalOrder finalOrder);
 
-    OrderLine addToShoppingCart(FinalOrder finalOrder, OrderLine orderLine);
+    OrderLine addToShoppingCart(long finalOrder, OrderLine orderLine);
 
     OrderLine updateInShoppingCart(FinalOrder finalOrder, OrderLine orderLine);
 

@@ -1,18 +1,21 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDateTime;
 
+
+@Data
 @Entity
 public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date date;
+    private LocalDateTime date;
 
     private BigDecimal amount;
 
@@ -22,7 +25,7 @@ public class OrderLine {
     @ManyToOne(fetch = FetchType.LAZY)
     private FinalOrder finalOrder;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private Product product;
 
     public OrderLine() {
@@ -32,21 +35,14 @@ public class OrderLine {
         return product.getPrice().multiply(amount);
     }
 
-    @JsonBackReference
+    @JsonBackReference(value="product2OrderLine")
     public Product getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    @JsonBackReference
+    @JsonBackReference(value="finalOrder2OrderLine")
     public FinalOrder getFinalOrder() {
         return finalOrder;
     }
 
-    public void setFinalOrder(FinalOrder finalOrder) {
-        this.finalOrder = finalOrder;
-    }
 }

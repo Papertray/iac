@@ -1,15 +1,17 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 
 import javax.persistence.*;
-import javax.xml.bind.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
+@Data
 @Entity
 public class Product implements Serializable {
     @Id
@@ -43,9 +45,6 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
 
     public Optional<BigDecimal> getDiscountPrice()  {
         if (discounts == null) {
@@ -60,54 +59,19 @@ public class Product implements Serializable {
         }
         return Optional.empty();
     }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    @JsonManagedReference(value="product2OrderLine")
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
     }
 
-    public String getName() {
-        return name;
+    @JsonManagedReference(value="product2Discount")
+    public Set<Discount> getDiscounts() {
+        return discounts;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getImage() {
-        return image;
-    }
-
-    public void setImage(long image) {
-        this.image = image;
-    }
-
-    @JsonBackReference
+    @JsonBackReference(value="product2Category")
     public Category getCategory() {
         return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public BigDecimal getMinimumPrice() {
-        return minimumPrice;
     }
 
     public void copyFrom(Product product) {

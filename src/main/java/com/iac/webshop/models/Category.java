@@ -52,7 +52,7 @@ public class Category implements Serializable {
         this.image = image;
     }
 
-    @JsonManagedReference
+    @JsonManagedReference(value="product2Category")
     public Set<Product> getProducts() {
         return products;
     }

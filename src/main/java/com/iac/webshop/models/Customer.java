@@ -2,6 +2,7 @@ package com.iac.webshop.models;
 
 import javax.persistence.*;
 
+
 @Entity
 public class Customer {
 

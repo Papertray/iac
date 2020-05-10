@@ -18,8 +18,7 @@ public class OrderController {
 
     @PostMapping("order/add/{finalOrderId}")
     public OrderLine addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine) {
-        return null;
-
+        return orderService.addToShoppingCart(finalOrderId, orderLine);
     }
 
     @PutMapping("order/update")
