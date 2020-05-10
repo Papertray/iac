@@ -3,6 +3,7 @@ package com.iac.webshop.models;
 import javax.persistence.*;
 
 @Entity
+@Table(schema = "public", name = "customer")
 public class Customer {
 
     @Id

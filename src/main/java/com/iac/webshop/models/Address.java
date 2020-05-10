@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(schema = "public", name = "address")
 public class Address {
 
     @Id

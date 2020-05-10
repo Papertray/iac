@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity
+@Table(schema = "public", name = "order_line")
 public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,7 +33,7 @@ public class OrderLine {
         return product.getPrice().multiply(amount);
     }
 
-    @JsonBackReference
+    @JsonBackReference()
     public Product getProduct() {
         return product;
     }

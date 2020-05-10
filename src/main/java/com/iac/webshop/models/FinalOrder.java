@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.util.Set;
 
 @Entity
+@Table(schema = "public", name = "final_order")
 public class FinalOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,20 +1,15 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.iac.webshop.helpers.ImageProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
+@Table(schema = "public", name = "category")
 // @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "products"})
 public class Category implements Serializable {
-    @Transient
-    private ImageProvider imageProvider;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -24,8 +19,8 @@ public class Category implements Serializable {
 
     private String description;
 
-    @Transient
-    private String image;
+    @OneToOne(fetch = FetchType.LAZY)
+    private File image;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<Product> products;
@@ -49,13 +44,16 @@ public class Category implements Serializable {
         this.description = description;
     }
 
-    public BufferedImage getImage() {
-        return imageProvider.ReadImage("Categories", String.valueOf(id));
-    }
-
-    public void setImage(String image) {
-        imageProvider.decoder(image, "Category/"+String.valueOf(id));
-    }
+//    @Transient
+//    private ImageProvider imageProvider;
+//
+//    public void setImage(String image) {
+//        imageProvider.decoder(image, "Category/"+String.valueOf(id));
+//    }
+//
+//    public BufferedImage getImage() {
+//        return imageProvider.ReadImage("Categories", String.valueOf(id));
+//    }
 
     @JsonManagedReference
     public Set<Product> getProducts() {
@@ -66,5 +64,11 @@ public class Category implements Serializable {
         this.products = products;
     }
 
+    public File getImage() {
+        return image;
+    }
 
+    public void setImage(File image) {
+        this.image = image;
+    }
 }

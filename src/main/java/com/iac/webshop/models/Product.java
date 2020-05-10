@@ -11,12 +11,13 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
+@Table(schema = "public", name = "product")
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private BigDecimal minimumPrice = BigDecimal.ZERO;
+    private final BigDecimal minimumPrice = BigDecimal.ZERO;
 
     private int supply;
 
@@ -29,7 +30,8 @@ public class Product implements Serializable {
     private String description;
 
     // Implement image storage
-    private long image;
+    @OneToOne()
+    private File image;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Category category;
@@ -87,11 +89,11 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public long getImage() {
+    public File getImage() {
         return image;
     }
 
-    public void setImage(long image) {
+    public void setImage(File image) {
         this.image = image;
     }
 
