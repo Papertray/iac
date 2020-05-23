@@ -1,20 +1,24 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 
 @Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,9 +56,9 @@ public class Product implements Serializable {
             return Optional.empty();
         }
         // Get discount price
-        Date date = new Date();
+        LocalDateTime date = LocalDateTime.now();
         for (Discount discount : discounts) {
-            if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
+            if (date.isAfter(discount.getStartDate()) || date.isBefore(discount.getEndDate())) {
                 return Optional.of(discount.getDiscountPrice());
             }
         }
