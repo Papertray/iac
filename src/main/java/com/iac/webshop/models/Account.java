@@ -1,15 +1,10 @@
 package com.iac.webshop.models;
 
 import com.iac.webshop.helpers.Utils;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.*;
 import javax.validation.ValidationException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Date;
 
 @Entity
@@ -99,7 +94,6 @@ public class Account {
     }
 
     private void validateEmail() throws ValidationException {
-
         if (!email.matches("^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$")) {
             throw new ValidationException("Email is invalid");
         }
