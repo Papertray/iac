@@ -2,15 +2,12 @@ package com.iac.webshop.services;
 
 import com.iac.webshop.exceptions.AccountNotFoundException;
 import com.iac.webshop.models.Account;
-import com.iac.webshop.models.Category;
 import com.iac.webshop.repositories.IAccountRepository;
 import com.iac.webshop.services.interfaces.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.validation.ValidationException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccountService implements IAccountService {
@@ -23,7 +20,6 @@ public class AccountService implements IAccountService {
         account.validate();
         List<Account> accounts = getAllAccounts();
         for (Account existingAccount : accounts ) {
-            System.out.println("Account " + account.getEmail());
             if (account.getEmail().equals(existingAccount.getEmail())) {
                 throw new ValidationException("Email is already in use");
             }

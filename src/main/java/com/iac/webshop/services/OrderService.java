@@ -8,11 +8,14 @@ import com.iac.webshop.services.interfaces.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class OrderService implements IOrderService {
 
     @Autowired
     IFinalOrderRepository finalOrderRepository;
+
     @Autowired
     IOrderLineRepository orderLineRepository;
 
@@ -22,22 +25,20 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderLine addToShoppingCart(FinalOrder finalOrder, OrderLine orderLine) {
-        return orderLineRepository.save(orderLine);
-    }
-
-    @Override
-    public OrderLine updateInShoppingCart(FinalOrder finalOrder, OrderLine orderLine) {
-        return orderLineRepository.save(orderLine);
-    }
-
-    @Override
-    public OrderLine removeFromShoppingCart(FinalOrder finalOrder, OrderLine orderLine) {
+    public OrderLine addToShoppingCart(long finalOrderId, OrderLine orderLine) {
+        Optional<FinalOrder> finalOrder = finalOrderRepository.findById(finalOrderId);
+        finalOrder.ifPresent(orderLine::setFinalOrder);
         return orderLineRepository.save(orderLine);
     }
 
     @Override
     public FinalOrder purchase(FinalOrder finalOrder) {
         return finalOrderRepository.save(finalOrder);
+    }
+
+    @Override
+    public void removeFromShoppingCart(long orderLineId) {
+        orderLineRepository.deleteById(orderLineId);
+
     }
 }

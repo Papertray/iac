@@ -18,20 +18,12 @@ public class OrderController {
 
     @PostMapping("order/add/{finalOrderId}")
     public OrderLine addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine) {
-        return null;
-
-    }
-
-    @PutMapping("order/update")
-    public OrderLine updateInShoppingCart(@RequestBody OrderLine orderLine) {
-        return null;
-
+        return orderService.addToShoppingCart(finalOrderId, orderLine);
     }
 
     @DeleteMapping("order/delete/{orderLineId}")
-    public OrderLine removeFromShoppingCart(@PathVariable long orderLineId) {
-        return null;
-
+    public void removeFromShoppingCart(@PathVariable long orderLineId) {
+        orderService.removeFromShoppingCart(orderLineId);
     }
 
     @PutMapping("order/purchase/{finalOrderId}")

@@ -1,5 +1,6 @@
 package com.iac.webshop.models;
 
+import lombok.Data;
 import com.iac.webshop.helpers.Utils;
 import javax.persistence.*;
 import javax.validation.ValidationException;
@@ -7,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
+@Data
 @Entity
 public class Account {
 
@@ -29,32 +31,14 @@ public class Account {
 
     // Initializers
 
-    public Account() { if (createdOn == null) createdOn = new Date(); }
-
-    // Getters and setters
-
-    public long getId() {
-        return id;
+    public Account() {
+        if (createdOn == null) createdOn = new Date();
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
+    // Methods
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -64,14 +48,6 @@ public class Account {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     // Validation
@@ -85,7 +61,7 @@ public class Account {
         if (password == null) {
             throw new ValidationException("Password is required");
         }
-        if (password.length() < 6 ) {
+        if (password.length() < 6) {
             throw new ValidationException("Password must be at least 6 characters long");
         }
         if (hashedPassword == null) {
