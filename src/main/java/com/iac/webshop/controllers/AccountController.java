@@ -5,10 +5,10 @@ import com.iac.webshop.services.interfaces.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class AccountController {
-
-    //test for pushing
 
     @Autowired
     IAccountService accountService;
@@ -21,6 +21,11 @@ public class AccountController {
     @GetMapping("/accounts/{id}")
     public Account getAccount(@PathVariable long id) {
         return accountService.getAccountById(id);
+    }
+
+    @GetMapping("/accounts")
+    public List<Account> getAccounts() {
+        return accountService.getAllAccounts();
     }
 
 }
