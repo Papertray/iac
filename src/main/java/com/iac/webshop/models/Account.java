@@ -1,7 +1,15 @@
 package com.iac.webshop.models;
 
+import com.iac.webshop.helpers.Utils;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.*;
 import javax.validation.ValidationException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.Date;
 
 @Entity
@@ -18,6 +26,8 @@ public class Account {
     private String email;
 
     @Column(nullable = false)
+    private byte[] hashedPassword;
+
     private String password;
 
     private boolean isActive;
@@ -52,12 +62,13 @@ public class Account {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+        try {
+            this.hashedPassword = Utils.encrypt(password);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isActive() {
@@ -72,6 +83,19 @@ public class Account {
 
     public void validate() {
         validateEmail();
+        validatePassword();
+    }
+
+    private void validatePassword() throws ValidationException {
+        if (password == null) {
+            throw new ValidationException("Password is required");
+        }
+        if (password.length() < 6 ) {
+            throw new ValidationException("Password must be at least 6 characters long");
+        }
+        if (hashedPassword == null) {
+            throw new ValidationException("Something went wrong");
+        }
     }
 
     private void validateEmail() throws ValidationException {
