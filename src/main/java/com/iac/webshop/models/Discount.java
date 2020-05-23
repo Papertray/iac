@@ -1,11 +1,14 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(schema = "public", name = "discount")
+@Data
 public class Discount {
 
     @Id
@@ -28,27 +31,8 @@ public class Discount {
     public Discount() {
     }
 
-    public BigDecimal getDiscountPrice() {
-        return discountPrice;
-    }
-
-    public void setDiscountPrice(BigDecimal discountPrice) {
-        this.discountPrice = discountPrice;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    @JsonBackReference(value="product2Discount")
+    public Product getProduct() {
+        return product;
     }
 }

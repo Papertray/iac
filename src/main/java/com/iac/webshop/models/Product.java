@@ -1,23 +1,26 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 
 import javax.persistence.*;
-import javax.xml.bind.ValidationException;
+import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
+
+@Data
 @Entity
-@Table(schema = "public", name = "product")
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private final BigDecimal minimumPrice = BigDecimal.ZERO;
+    private BigDecimal minimumPrice = BigDecimal.ZERO;
 
     private int supply;
 
@@ -45,10 +48,6 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
     public Optional<BigDecimal> getDiscountPrice()  {
         if (discounts == null) {
             return Optional.empty();
@@ -62,59 +61,50 @@ public class Product implements Serializable {
         }
         return Optional.empty();
     }
-
-    public void setPrice(BigDecimal price) throws ValidationException {
-        if (price.scale() != 2) {
-            throw new ValidationException("Two numbers after decimal expected");
-        }
-        if (price.compareTo(minimumPrice) < 0) {
-            throw new ValidationException("Price lower than minimum price");
-        }
-        this.price = price;
+    @JsonManagedReference(value="product2OrderLine")
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
     }
 
-    public String getName() {
-        return name;
+    @JsonManagedReference(value="product2Discount")
+    public Set<Discount> getDiscounts() {
+        return discounts;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public File getImage() {
-        return image;
-    }
-
-    public void setImage(File image) {
-        this.image = image;
-    }
-
-    @JsonBackReference
+    @JsonBackReference(value="product2Category")
     public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     public void copyFrom(Product product) {
         setName(product.getName());
-        try {
-            setPrice(product.getPrice());
-        } catch (ValidationException e) {
-            // TODO: Figure out how to pass this error to response body
-            e.printStackTrace();
-        }
+        setPrice(product.getPrice());
         setDescription(product.getDescription());
         setImage(product.getImage());
+    }
+
+    // Validation
+
+    public void validate() {
+        validateName();
+        validatePrice();
+    }
+
+    public void validateName() throws ValidationException {
+
+        if (name.isEmpty()) {
+            throw new ValidationException("Name can not be empty");
+        }
+    }
+
+    public void validatePrice() throws ValidationException {
+
+        if (price.scale() != 2) {
+            throw new ValidationException("Price must have two decimals");
+        }
+
+        if (price.compareTo(minimumPrice) < 0) {
+            throw new ValidationException("Price was lower than minimum price");
+        }
     }
 }

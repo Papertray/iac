@@ -1,6 +1,5 @@
 package com.iac.webshop.services;
 
-import com.iac.webshop.exceptions.NotFoundException;
 import com.iac.webshop.exceptions.ProductNotFoundException;
 import com.iac.webshop.models.Category;
 import com.iac.webshop.models.Product;
@@ -10,9 +9,9 @@ import com.iac.webshop.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.xml.bind.ValidationException;
+import javax.validation.ValidationException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +34,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(Product product) {
+        product.validate();
         Optional<Category> category = categoryRepository.findById(defaultCategoryId);
         category.ifPresent(product::setCategory);
         return productRepository.save(product);
@@ -42,9 +42,11 @@ public class ProductService implements IProductService {
 
     @Override
     public Product updateProduct(Product product, long id) {
+        product.validate();
         return productRepository.findById(id)
-                .map(existingProduct -> { existingProduct.copyFrom(product);
-                    return productRepository.save(existingProduct);
+                .map(existingProduct -> {
+                    product.setId(id);
+                    return productRepository.save(product);
                 }).orElseThrow(() -> new ProductNotFoundException(id));
     }
 

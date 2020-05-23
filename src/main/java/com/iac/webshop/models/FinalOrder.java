@@ -1,25 +1,38 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(schema = "public", name = "final_order")
 public class FinalOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private LocalDateTime date;
 
-    private Date date;
+    /*
+    public void setDate(String date) {
+        String test = "2020-04-25 15:04:45";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime testDate = LocalDateTime.parse(test, formatter);
+        LocalDateTime actualDate = LocalDateTime.parse(date, formatter);
+        this.date = actualDate;
+    }
+    */
 
     @Column(nullable = false)
     private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "finalOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private Set<OrderLine> orderLines;
 
     private boolean finished;
@@ -36,12 +49,9 @@ public class FinalOrder {
     public FinalOrder() {
     }
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "finalOrder2OrderLine")
     public Set<OrderLine> getOrderLines() {
         return orderLines;
     }
 
-    public void setOrderLines(Set<OrderLine> orderLines) {
-        this.orderLines = orderLines;
-    }
 }

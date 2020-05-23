@@ -1,11 +1,19 @@
 package com.iac.webshop.models;
 
+import lombok.Data;
+import com.iac.webshop.helpers.Utils;
 import javax.persistence.*;
+import javax.validation.ValidationException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
+@Data
 @Entity
 @Table(schema = "public", name = "account")
 public class Account {
+
+    // Properties
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,49 +24,55 @@ public class Account {
     private String email;
 
     @Column(nullable = false)
+    private byte[] hashedPassword;
+
     private String password;
 
     private boolean isActive;
 
-    public Account() { if (createdOn == null) createdOn = new Date(); }
+    // Initializers
 
-    public long getId() {
-        return id;
+    public Account() {
+        if (createdOn == null) createdOn = new Date();
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
+    // Methods
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+        try {
+            this.hashedPassword = Utils.encrypt(password);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
     }
 
-    public boolean isActive() {
-        return isActive;
+    // Validation
+
+    public void validate() {
+        validateEmail();
+        validatePassword();
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    private void validatePassword() throws ValidationException {
+        if (password == null) {
+            throw new ValidationException("Password is required");
+        }
+        if (password.length() < 6) {
+            throw new ValidationException("Password must be at least 6 characters long");
+        }
+        if (hashedPassword == null) {
+            throw new ValidationException("Something went wrong");
+        }
+    }
+
+    private void validateEmail() throws ValidationException {
+        if (!email.matches("^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$")) {
+            throw new ValidationException("Email is invalid");
+        }
     }
 }
