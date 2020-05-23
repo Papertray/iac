@@ -27,12 +27,6 @@ public class OrderService implements IOrderService {
     @Override
     public OrderLine addToShoppingCart(long finalOrderId, OrderLine orderLine) {
         Optional<FinalOrder> finalOrder = finalOrderRepository.findById(finalOrderId);
-
-        /* old, apperently could be replaced by :: & ifpresent, keeping for test)
-        if (!finalOrder.isEmpty())
-            orderLine.setFinalOrder(finalOrder.get());
-
-        */
         finalOrder.ifPresent(orderLine::setFinalOrder);
         return orderLineRepository.save(orderLine);
     }
