@@ -2,12 +2,10 @@ package com.iac.webshop.services;
 
 import com.iac.webshop.exceptions.AccountNotFoundException;
 import com.iac.webshop.models.Account;
-import com.iac.webshop.models.Category;
 import com.iac.webshop.repositories.IAccountRepository;
 import com.iac.webshop.services.interfaces.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @Service
 public class AccountService implements IAccountService {
@@ -16,7 +14,8 @@ public class AccountService implements IAccountService {
     IAccountRepository accountRepository;
 
     @Override
-    public void createAccount(Account account) { accountRepository.save(account);
+    public Account createAccount(Account account) {
+       return accountRepository.save(account);
     }
 
     @Override

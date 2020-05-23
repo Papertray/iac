@@ -45,7 +45,6 @@ public class Product implements Serializable {
     public Product() {
     }
 
-
     public Optional<BigDecimal> getDiscountPrice()  {
         if (discounts == null) {
             return Optional.empty();

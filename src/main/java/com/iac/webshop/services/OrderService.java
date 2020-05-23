@@ -22,29 +22,29 @@ public class OrderService implements IOrderService {
     @Override
     public FinalOrder createShoppingCart(FinalOrder finalOrder) {
         return finalOrderRepository.save(finalOrder);
-
     }
 
     @Override
     public OrderLine addToShoppingCart(long finalOrderId, OrderLine orderLine) {
         Optional<FinalOrder> finalOrder = finalOrderRepository.findById(finalOrderId);
+
+        /* old, apperently could be replaced by :: & ifpresent, keeping for test)
         if (!finalOrder.isEmpty())
             orderLine.setFinalOrder(finalOrder.get());
-        return orderLineRepository.save(orderLine);
-    }
 
-    @Override
-    public OrderLine updateInShoppingCart(FinalOrder finalOrder, OrderLine orderLine) {
-        return orderLineRepository.save(orderLine);
-    }
-
-    @Override
-    public OrderLine removeFromShoppingCart(FinalOrder finalOrder, OrderLine orderLine) {
+        */
+        finalOrder.ifPresent(orderLine::setFinalOrder);
         return orderLineRepository.save(orderLine);
     }
 
     @Override
     public FinalOrder purchase(FinalOrder finalOrder) {
         return finalOrderRepository.save(finalOrder);
+    }
+
+    @Override
+    public void removeFromShoppingCart(long orderLineId) {
+        orderLineRepository.deleteById(orderLineId);
+
     }
 }

@@ -21,16 +21,9 @@ public class OrderController {
         return orderService.addToShoppingCart(finalOrderId, orderLine);
     }
 
-    @PutMapping("order/update")
-    public OrderLine updateInShoppingCart(@RequestBody OrderLine orderLine) {
-        return null;
-
-    }
-
     @DeleteMapping("order/delete/{orderLineId}")
-    public OrderLine removeFromShoppingCart(@PathVariable long orderLineId) {
-        return null;
-
+    public void removeFromShoppingCart(@PathVariable long orderLineId) {
+        orderService.removeFromShoppingCart(orderLineId);
     }
 
     @PutMapping("order/purchase/{finalOrderId}")
