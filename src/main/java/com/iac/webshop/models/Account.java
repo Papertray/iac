@@ -1,10 +1,13 @@
 package com.iac.webshop.models;
 
 import javax.persistence.*;
+import javax.validation.ValidationException;
 import java.util.Date;
 
 @Entity
 public class Account {
+
+    // Properties
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +22,11 @@ public class Account {
 
     private boolean isActive;
 
+    // Initializers
+
     public Account() { if (createdOn == null) createdOn = new Date(); }
+
+    // Getters and setters
 
     public long getId() {
         return id;
@@ -59,5 +66,18 @@ public class Account {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    // Validation
+
+    public void validate() {
+        validateEmail();
+    }
+
+    private void validateEmail() throws ValidationException {
+
+        if (!email.matches("^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$")) {
+            throw new ValidationException("Email is invalid");
+        }
     }
 }

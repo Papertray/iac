@@ -13,8 +13,8 @@ public class AccountController {
     IAccountService accountService;
 
     @PostMapping("/accounts")
-    public void createAccount(@RequestBody Account account) {
-        accountService.createAccount(account);
+    public Account createAccount(@RequestBody Account account) {
+        return accountService.createAccount(account);
     }
 
     @GetMapping("/accounts/{id}")
