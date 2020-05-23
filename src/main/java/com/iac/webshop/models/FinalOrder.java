@@ -15,6 +15,7 @@ public class FinalOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private LocalDateTime date;
 
     /*

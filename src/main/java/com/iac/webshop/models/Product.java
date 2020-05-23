@@ -33,7 +33,8 @@ public class Product implements Serializable {
     private String description;
 
     // Implement image storage
-    private long image;
+    @OneToOne()
+    private File image;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Category category;
