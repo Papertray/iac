@@ -1,7 +1,8 @@
 package com.iac.webshop.models;
 
-import lombok.Data;
 import com.iac.webshop.helpers.Utils;
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.ValidationException;
 import java.security.NoSuchAlgorithmException;
@@ -10,7 +11,6 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(schema = "public", name = "account")
 public class Account {
 
     // Properties
@@ -18,6 +18,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private Date createdOn;
 
     @Column(nullable = false)

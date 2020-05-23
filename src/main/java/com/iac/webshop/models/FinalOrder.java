@@ -11,11 +11,11 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(schema = "public", name = "final_order")
 public class FinalOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private LocalDateTime date;
 
     /*

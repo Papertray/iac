@@ -11,17 +11,24 @@ import java.io.IOException;
 public class File {
     @Transient
     public String fileData;
+
     @Transient
     private ImageProvider imageProvider;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     @OneToOne(mappedBy = "image")
     private Product product;
+
     @OneToOne(mappedBy = "image")
     private Category category;
+
     private String folderName;
+
     private String fileName;
+
     private String fileExtension;
 
     public String getFileData() throws IOException {

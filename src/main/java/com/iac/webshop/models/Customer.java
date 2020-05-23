@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(schema = "public", name = "customer")
 public class Customer {
 
     @Id

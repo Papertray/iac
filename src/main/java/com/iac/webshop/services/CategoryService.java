@@ -39,10 +39,6 @@ public class CategoryService implements ICategoryService {
     public Category getCategoryById(long id) {
         Optional<Category> categories = categoryRepository.findById(id);
         if (categories.isEmpty()) return null;
-
-        //List<Product> products = productRepository.findAllByCategory(category);
-
-        //category.setProducts(products);
         return categories.get();
     }
 }
