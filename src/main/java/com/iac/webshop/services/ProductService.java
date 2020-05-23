@@ -34,8 +34,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(Product product) {
-        validatePrice(product.getPrice(), product.getMinimumPrice());
-
+        product.validate();
         Optional<Category> category = categoryRepository.findById(defaultCategoryId);
         category.ifPresent(product::setCategory);
         return productRepository.save(product);
@@ -43,30 +42,16 @@ public class ProductService implements IProductService {
 
     @Override
     public Product updateProduct(Product product, long id) {
-        ValidateProduct(product);
-
+        product.validate();
         return productRepository.findById(id)
-                .map(existingProduct -> { existingProduct.copyFrom(product);
-                    return productRepository.save(existingProduct);
+                .map(existingProduct -> {
+                    product.setId(id);
+                    return productRepository.save(product);
                 }).orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     @Override
     public Product getProductById(long id) {
         return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-    }
-
-    private void ValidateProduct(Product product) {
-        validatePrice(product.getPrice(), product.getMinimumPrice());
-    }
-
-    private void validatePrice(BigDecimal price, BigDecimal minimumPrice) {
-        if (price.scale() != 2) {
-            throw new ValidationException("Two numbers after decimal expected");
-        }
-
-        if (price.compareTo(minimumPrice) < 0) {
-            throw new ValidationException("Price lower than minimum price");
-        }
     }
 }
