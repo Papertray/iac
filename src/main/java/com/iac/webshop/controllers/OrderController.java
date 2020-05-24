@@ -16,9 +16,9 @@ public class OrderController {
         return orderService.createShoppingCart(finalOrder);
     }
 
-    @PostMapping("order/add/{finalOrderId}")
-    public OrderLine addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine) {
-        return orderService.addToShoppingCart(finalOrderId, orderLine);
+    @PostMapping("order/add/{finalOrderId}/product/{productId}")
+    public OrderLine addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine, @PathVariable long productId) {
+        return orderService.addToShoppingCart(finalOrderId, orderLine, productId);
     }
 
     @DeleteMapping("order/delete/{orderLineId}")

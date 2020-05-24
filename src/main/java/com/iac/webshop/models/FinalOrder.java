@@ -40,7 +40,7 @@ public class FinalOrder {
     private BigDecimal getPrice() {
         BigDecimal allPrices = BigDecimal.ZERO;
         for (OrderLine orderLine : orderLines) {
-            allPrices = allPrices.add(orderLine.getPrice());
+            allPrices = allPrices.add(orderLine.getTotalPrice());
         }
         totalPrice = allPrices;
         return totalPrice;

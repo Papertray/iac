@@ -4,10 +4,11 @@ import com.iac.webshop.models.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.jupiter.api.Assertions.*;
+
 import javax.validation.ValidationException;
 import java.math.BigDecimal;
-import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProductTest {
@@ -19,7 +20,7 @@ class ProductTest {
         BigDecimal decimal = new BigDecimal("2.99");
         product.setPrice(decimal);
         assertEquals(product.getPrice(), decimal);
-        assertDoesNotThrow(() -> product.validatePrice());
+        assertDoesNotThrow(product::validatePrice);
     }
 
     @Test
@@ -54,8 +55,8 @@ class ProductTest {
     @DisplayName("Get discount price when no discounts are added")
     void getDiscountPriceWhenNoneAreAdded() {
         Product product = new Product();
-        Optional<BigDecimal> discountPrice = product.getDiscountPrice();
-        assertTrue(discountPrice.isEmpty());
+        BigDecimal discountPrice = product.getDiscountPrice();
+        assertSame(discountPrice, product.getPrice());
     }
 
     @Test
@@ -64,7 +65,7 @@ class ProductTest {
         Product product = new Product();
         String name = "Test product 1";
         product.setName(name);
-        assertDoesNotThrow(() -> product.validateName());
+        assertDoesNotThrow(product::validateName);
         assertEquals(name, product.getName());
     }
 

@@ -17,7 +17,7 @@ public class OrderLine {
 
     private LocalDateTime date;
 
-    private BigDecimal amount;
+    private int amount;
 
     @Column(nullable = false)
     private BigDecimal totalPrice;
@@ -31,8 +31,8 @@ public class OrderLine {
     public OrderLine() {
     }
 
-    public BigDecimal getPrice() {
-        return product.getPrice().multiply(amount);
+    public BigDecimal getTotalPrice() {
+        return product.getPrice().multiply(BigDecimal.valueOf(amount));
     }
 
     @JsonBackReference(value="product2OrderLine")

@@ -9,7 +9,6 @@ import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -33,7 +32,7 @@ public class Product implements Serializable {
     private String description;
 
     // Implement image storage
-    @OneToOne()
+    @OneToOne(cascade = {CascadeType.ALL})
     private File image;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -48,18 +47,17 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Optional<BigDecimal> getDiscountPrice()  {
-        if (discounts == null) {
-            return Optional.empty();
-        }
+    public BigDecimal getDiscountPrice()  {
         // Get discount price
         Date date = new Date();
-        for (Discount discount : discounts) {
-            if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
-                return Optional.of(discount.getDiscountPrice());
+        if (discounts != null) {
+            for (Discount discount : discounts) {
+                if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
+                    return discount.getDiscountPrice();
+                }
             }
         }
-        return Optional.empty();
+        return price;
     }
     @JsonManagedReference(value="product2OrderLine")
     public Set<OrderLine> getOrderLines() {
