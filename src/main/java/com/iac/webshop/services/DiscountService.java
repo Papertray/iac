@@ -1,5 +1,6 @@
 package com.iac.webshop.services;
 
+        import com.iac.webshop.exceptions.ProductNotFoundException;
         import com.iac.webshop.models.Discount;
         import com.iac.webshop.models.Product;
         import com.iac.webshop.repositories.IDiscountRepository;
@@ -27,8 +28,10 @@ public class DiscountService implements IDiscountService {
 
     @Override
     public Discount addDiscount(Discount discount, Long productID) {
-        Optional<Product> product = productRepository.findById(productID);
-        discount.setProduct(product.get());
-        return discountRepository.save(discount);
+        return productRepository.findById(productID)
+                .map(product -> {
+                    discount.setProduct(product);
+                    return discountRepository.save(discount);
+                }).orElseThrow(() -> new ProductNotFoundException(productID));
     }
 }

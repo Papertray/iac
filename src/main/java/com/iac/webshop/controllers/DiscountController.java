@@ -20,7 +20,6 @@ public class DiscountController {
 
     @PostMapping("discounts")
     public Discount addDiscount(@RequestBody Discount discount, Long productID) {
-
         return discountService.addDiscount(discount, productID);
     }
 }
