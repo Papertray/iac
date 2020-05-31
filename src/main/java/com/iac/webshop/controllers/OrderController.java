@@ -28,6 +28,6 @@ public class OrderController {
 
     @PutMapping("order/purchase/{finalOrderId}")
     public FinalOrder purchase(@PathVariable long finalOrderId) {
-        return null;
+        return orderService.purchase(finalOrderId);
     }
 }

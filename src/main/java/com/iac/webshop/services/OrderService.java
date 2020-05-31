@@ -32,8 +32,9 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public FinalOrder purchase(FinalOrder finalOrder) {
-        return finalOrderRepository.save(finalOrder);
+    public FinalOrder purchase(long finalOrderId) {
+        Optional<FinalOrder> finalOrder = finalOrderRepository.findById(finalOrderId);
+        finalOrder.get().getOrderLines();
     }
 
     @Override

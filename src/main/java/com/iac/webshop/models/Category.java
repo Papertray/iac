@@ -21,8 +21,8 @@ public class Category implements Serializable {
 
     private String description;
 
-    // Implement image storage
-    private long image;
+    @OneToOne(fetch = FetchType.LAZY)
+    private File image;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<Product> products;
