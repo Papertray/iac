@@ -1,3 +1,3 @@
-# iac
+Integration and Communication Project 2020
 
-[![Actions Status](https://github.com/Papertray/iac/workflows/maven.yml/badge.svg)](https://github.com/Papertray/iac/actions)
+![Java CI with Maven](https://github.com/Papertray/iac/workflows/Java%20CI%20with%20Maven/badge.svg?branch=dev)
