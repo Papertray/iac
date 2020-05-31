@@ -1,5 +1,6 @@
 package com.iac.webshop.services;
 
+import com.iac.webshop.exceptions.NotFoundException;
 import com.iac.webshop.models.FinalOrder;
 import com.iac.webshop.models.OrderLine;
 import com.iac.webshop.repositories.IFinalOrderRepository;
@@ -33,8 +34,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public FinalOrder purchase(long finalOrderId) {
-        Optional<FinalOrder> finalOrder = finalOrderRepository.findById(finalOrderId);
-        finalOrder.get().getOrderLines();
+        return finalOrderRepository.findById(finalOrderId).orElseThrow(()-> new NotFoundException("finalOrder", finalOrderId));
     }
 
     @Override
