@@ -3,6 +3,8 @@ package com.iac.webshop.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -33,6 +35,7 @@ public class FinalOrder {
 
     @OneToMany(mappedBy = "finalOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    @Fetch(FetchMode.JOIN)
     private Set<OrderLine> orderLines;
 
     private boolean finished;
