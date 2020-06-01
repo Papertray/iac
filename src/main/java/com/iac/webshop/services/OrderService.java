@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Service
 public class OrderService implements IOrderService {
@@ -47,8 +48,18 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public FinalOrder purchase(long finalOrderId) {
-        return finalOrderRepository.findById(finalOrderId).orElseThrow(()-> new NotFoundException("finalOrder", finalOrderId));
+    public Boolean purchase(long finalOrderId) {
+        FinalOrder finalOrder = finalOrderRepository.findById(finalOrderId).orElseThrow(() -> new NotFoundException("FinalOrder", finalOrderId));
+        finalOrder.isFinished();
+
+        Set<OrderLine> orderLines = finalOrder.getOrderLines();
+        for (OrderLine orderLine : orderLines) {
+            if (!hasSupply(orderLine.getProduct().getId(), orderLine.getAmount())){
+                throw new NotInStockException(orderLine.getAmount(), orderLine.getProduct().getSupply(), orderLine.getProduct().getName());
+            }
+        }
+        finalOrder.setFinished(true);
+        return true;
     }
 
     @Override
@@ -56,6 +67,7 @@ public class OrderService implements IOrderService {
         orderLineRepository.deleteById(orderLineId);
 
     }
+
     private BigDecimal calculateTotalPrice(Product product, long amount){
         return product.getDiscountPrice().multiply(BigDecimal.valueOf(amount));
     }

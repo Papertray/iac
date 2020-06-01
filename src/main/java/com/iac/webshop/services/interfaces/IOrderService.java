@@ -8,7 +8,7 @@ public interface IOrderService {
 
     OrderLine addToShoppingCart(long finalOrderId, OrderLine orderLine, long productId);
 
-    FinalOrder purchase(long finalOrder);
+    Boolean purchase(long finalOrder);
 
     void removeFromShoppingCart(long orderLineId);
 }
