@@ -10,10 +10,10 @@ import com.iac.webshop.repositories.IOrderLineRepository;
 import com.iac.webshop.repositories.IProductRepository;
 import com.iac.webshop.services.interfaces.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Service
 public class OrderService implements IOrderService {
@@ -36,6 +36,7 @@ public class OrderService implements IOrderService {
     public OrderLine addToShoppingCart(long finalOrderId, OrderLine orderLine, long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product", orderLine.getProduct().getId()));
         FinalOrder finalOrder = finalOrderRepository.findById(finalOrderId).orElseThrow(() -> new NotFoundException("FinalOrder", finalOrderId));
+
         orderLine.setFinalOrder(finalOrder);
         orderLine.setProduct(product);
         orderLine.setTotalPrice(calculateTotalPrice(product, orderLine.getAmount()));
@@ -43,29 +44,33 @@ public class OrderService implements IOrderService {
         if (!hasSupply(product.getId(), orderLine.getAmount())){
             throw new NotInStockException(orderLine.getAmount(), product.getSupply(), product.getName());
         }
-
         return orderLineRepository.save(orderLine);
     }
 
     @Override
-    public Boolean purchase(long finalOrderId) {
+    public ResponseEntity purchase(long finalOrderId) {
         FinalOrder finalOrder = finalOrderRepository.findById(finalOrderId).orElseThrow(() -> new NotFoundException("FinalOrder", finalOrderId));
-        finalOrder.isFinished();
 
-        Set<OrderLine> orderLines = finalOrder.getOrderLines();
+        /*
+        int orderLineCount = finalOrder.getOrderLines().size();
+        Set<OrderLine> orderLines;
+        orderLines = finalOrder.getOrderLines();
+
+        if  (orderLines.size() == 0) throw new EmptyShoppingCartException(finalOrderId);
+
         for (OrderLine orderLine : orderLines) {
-            if (!hasSupply(orderLine.getProduct().getId(), orderLine.getAmount())){
+            if (!hasSupply(orderLine.getProduct().getId(), orderLine.getAmount()))
                 throw new NotInStockException(orderLine.getAmount(), orderLine.getProduct().getSupply(), orderLine.getProduct().getName());
-            }
         }
+         */
         finalOrder.setFinished(true);
-        return true;
+        finalOrderRepository.save(finalOrder);
+        return ResponseEntity.ok(finalOrder);
     }
 
     @Override
     public void removeFromShoppingCart(long orderLineId) {
         orderLineRepository.deleteById(orderLineId);
-
     }
 
     private BigDecimal calculateTotalPrice(Product product, long amount){

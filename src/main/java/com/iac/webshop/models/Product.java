@@ -36,12 +36,15 @@ public class Product implements Serializable {
     private File image;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value="product2Category")
     private Category category;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonManagedReference(value="product2OrderLine")
     private Set<OrderLine> orderLines;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonManagedReference(value="product2Discount")
     private Set<Discount> discounts;
 
     public Product() {
@@ -59,17 +62,17 @@ public class Product implements Serializable {
         }
         return price;
     }
-    @JsonManagedReference(value="product2OrderLine")
+
     public Set<OrderLine> getOrderLines() {
         return orderLines;
     }
 
-    @JsonManagedReference(value="product2Discount")
+
     public Set<Discount> getDiscounts() {
         return discounts;
     }
 
-    @JsonBackReference(value="product2Category")
+
     public Category getCategory() {
         return category;
     }

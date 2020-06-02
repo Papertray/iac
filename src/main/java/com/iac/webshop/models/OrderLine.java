@@ -1,16 +1,22 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
 @Data
+@EqualsAndHashCode(exclude = {"finalOrder"})
 @Entity
-public class OrderLine {
+@Table(name = "order_line")
+public class OrderLine implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -23,6 +29,9 @@ public class OrderLine {
     private BigDecimal totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "final_order_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property  = "final_order_id")
     private FinalOrder finalOrder;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
@@ -39,10 +48,4 @@ public class OrderLine {
     public Product getProduct() {
         return product;
     }
-
-    @JsonBackReference(value="finalOrder2OrderLine")
-    public FinalOrder getFinalOrder() {
-        return finalOrder;
-    }
-
 }

@@ -1,42 +1,35 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
-public class FinalOrder {
+@Table(name = "final_order")
+public class FinalOrder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private LocalDateTime date;
 
-    /*
-    public void setDate(String date) {
-        String test = "2020-04-25 15:04:45";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime testDate = LocalDateTime.parse(test, formatter);
-        LocalDateTime actualDate = LocalDateTime.parse(date, formatter);
-        this.date = actualDate;
-    }
-    */
-
     @Column(nullable = false)
     private BigDecimal totalPrice;
 
-    @OneToMany(mappedBy = "finalOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="finalOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property  = "id")
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    @Fetch(FetchMode.JOIN)
-    private Set<OrderLine> orderLines;
+    private Set<OrderLine> orderLines = new HashSet<>();
 
     private boolean finished;
 
@@ -51,10 +44,4 @@ public class FinalOrder {
 
     public FinalOrder() {
     }
-
-    @JsonManagedReference(value = "finalOrder2OrderLine")
-    public Set<OrderLine> getOrderLines() {
-        return orderLines;
-    }
-
 }
