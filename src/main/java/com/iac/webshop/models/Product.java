@@ -1,7 +1,5 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -36,15 +34,12 @@ public class Product implements Serializable {
     private File image;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference(value="product2Category")
     private Category category;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    @JsonManagedReference(value="product2OrderLine")
     private Set<OrderLine> orderLines;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    @JsonManagedReference(value="product2Discount")
     private Set<Discount> discounts;
 
     public Product() {

@@ -1,8 +1,5 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,9 +23,8 @@ public class FinalOrder implements Serializable {
     private BigDecimal totalPrice;
 
     @OneToMany(mappedBy="finalOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property  = "id")
-    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property  = "id")
+    //@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private Set<OrderLine> orderLines = new HashSet<>();
 
     private boolean finished;

@@ -1,7 +1,9 @@
 package com.iac.webshop.services;
 
+import com.iac.webshop.dto.OrderLineDTO;
 import com.iac.webshop.exceptions.NotFoundException;
 import com.iac.webshop.exceptions.NotInStockException;
+import com.iac.webshop.mappers.OrderLineMapper;
 import com.iac.webshop.models.FinalOrder;
 import com.iac.webshop.models.OrderLine;
 import com.iac.webshop.models.Product;
@@ -9,23 +11,20 @@ import com.iac.webshop.repositories.IFinalOrderRepository;
 import com.iac.webshop.repositories.IOrderLineRepository;
 import com.iac.webshop.repositories.IProductRepository;
 import com.iac.webshop.services.interfaces.IOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService implements IOrderService {
 
-    @Autowired
-    IFinalOrderRepository finalOrderRepository;
-
-    @Autowired
-    IOrderLineRepository orderLineRepository;
-
-    @Autowired
-    IProductRepository productRepository;
+    final IFinalOrderRepository finalOrderRepository;
+    final IOrderLineRepository orderLineRepository;
+    final IProductRepository productRepository;
+    final OrderLineMapper orderLineMapper;
 
     @Override
     public FinalOrder createShoppingCart(FinalOrder finalOrder) {
@@ -49,7 +48,14 @@ public class OrderService implements IOrderService {
 
     @Override
     public ResponseEntity purchase(long finalOrderId) {
+
         FinalOrder finalOrder = finalOrderRepository.findById(finalOrderId).orElseThrow(() -> new NotFoundException("FinalOrder", finalOrderId));
+        finalOrder.setFinished(true);
+        finalOrder = finalOrderRepository.save(finalOrder);
+
+
+        OrderLineDTO orderLineDTO = orderLineMapper.reverse();
+
 
         /*
         int orderLineCount = finalOrder.getOrderLines().size();
@@ -63,9 +69,7 @@ public class OrderService implements IOrderService {
                 throw new NotInStockException(orderLine.getAmount(), orderLine.getProduct().getSupply(), orderLine.getProduct().getName());
         }
          */
-        finalOrder.setFinished(true);
-        finalOrderRepository.save(finalOrder);
-        return ResponseEntity.ok(finalOrder);
+        return ResponseEntity.ok(orderLineDTO);
     }
 
     @Override

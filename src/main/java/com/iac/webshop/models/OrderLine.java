@@ -1,8 +1,6 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,9 +27,9 @@ public class OrderLine implements Serializable {
     private BigDecimal totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "final_order_id")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property  = "final_order_id")
+    @JsonIgnore
+//    @JoinColumn(name = "final_order_id")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property  = "final_order_id")
     private FinalOrder finalOrder;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
@@ -44,7 +42,6 @@ public class OrderLine implements Serializable {
         return product.getPrice().multiply(BigDecimal.valueOf(amount));
     }
 
-    @JsonBackReference(value="product2OrderLine")
     public Product getProduct() {
         return product;
     }

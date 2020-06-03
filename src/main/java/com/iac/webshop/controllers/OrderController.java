@@ -18,6 +18,7 @@ public class OrderController {
     }
 
     @PostMapping("order/add/{finalOrderId}/product/{productId}")
+    // todo return oprderlineDTO
     public OrderLine addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine, @PathVariable long productId) {
         return orderService.addToShoppingCart(finalOrderId, orderLine, productId);
     }

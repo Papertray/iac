@@ -1,6 +1,5 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -34,7 +33,6 @@ public class Category implements Serializable {
     public Category() {
     }
 
-    @JsonManagedReference(value="product2Category")
     public Set<Product> getProducts() {
         return products;
     }
