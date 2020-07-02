@@ -1,5 +1,6 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ public class Discount {
 
     public Discount() {
     }
-
+    @JsonBackReference(value="product2Discount")
     public Product getProduct() {
         return product;
     }

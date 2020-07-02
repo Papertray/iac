@@ -1,9 +1,11 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,8 +25,8 @@ public class Category implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     private File image;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private Set<Product> products;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Product> products = new HashSet<>();
 
     public String getName() {
         return name;
@@ -33,6 +35,7 @@ public class Category implements Serializable {
     public Category() {
     }
 
+    @JsonManagedReference(value="product2Category")
     public Set<Product> getProducts() {
         return products;
     }

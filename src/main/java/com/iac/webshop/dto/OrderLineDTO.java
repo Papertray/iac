@@ -1,15 +1,15 @@
 package com.iac.webshop.dto;
-import lombok.Value;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Value
+@Data
 public class OrderLineDTO {
     long id;
     LocalDateTime date;
     int amount;
     BigDecimal totalPrice;
-    int finalOrderID;
-    int productID;
+    long finalOrderID;
+    long productID;
 }

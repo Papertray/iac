@@ -1,5 +1,7 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,6 +9,7 @@ import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -33,13 +36,13 @@ public class Product implements Serializable {
     @OneToOne(cascade = {CascadeType.ALL})
     private File image;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     private Set<OrderLine> orderLines;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     private Set<Discount> discounts;
 
     public Product() {
@@ -58,16 +61,17 @@ public class Product implements Serializable {
         return price;
     }
 
+    @JsonManagedReference(value="product2OrderLine")
     public Set<OrderLine> getOrderLines() {
         return orderLines;
     }
 
-
+    @JsonManagedReference(value="product2Discount")
     public Set<Discount> getDiscounts() {
         return discounts;
     }
 
-
+    @JsonBackReference(value="product2Category")
     public Category getCategory() {
         return category;
     }
@@ -102,5 +106,32 @@ public class Product implements Serializable {
         if (price.compareTo(minimumPrice) < 0) {
             throw new ValidationException("Price was lower than minimum price");
         }
+    }
+    public void reduceSupply(int amount){
+        this.supply = supply - amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product )) return false;
+        return Objects.equals(id, ((Product) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 32;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", minimumPrice=" + minimumPrice +
+                ", supply=" + supply +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

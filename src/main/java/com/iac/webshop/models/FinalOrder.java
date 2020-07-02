@@ -1,5 +1,6 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,8 +24,6 @@ public class FinalOrder implements Serializable {
     private BigDecimal totalPrice;
 
     @OneToMany(mappedBy="finalOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property  = "id")
-    //@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private Set<OrderLine> orderLines = new HashSet<>();
 
     private boolean finished;
@@ -34,10 +33,37 @@ public class FinalOrder implements Serializable {
         for (OrderLine orderLine : orderLines) {
             allPrices = allPrices.add(orderLine.getTotalPrice());
         }
-        totalPrice = allPrices;
-        return totalPrice;
+        return allPrices;
+    }
+
+    public boolean getStatus() {
+        return finished;
     }
 
     public FinalOrder() {
+    }
+
+    public void removeOrderLine (OrderLine orderLine) {
+        orderLines.remove(orderLine);
+        orderLine.setFinalOrder(null);
+    }
+    public void addOrderLine (OrderLine orderLine) {
+        orderLines.add(orderLine);
+        orderLine.setFinalOrder(this);
+    }
+
+    @JsonManagedReference(value="finalOrder2OrderLine")
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
+    @Override
+    public String toString() {
+        return "FinalOrder{" +
+                "id=" + id +
+                ", date=" + date +
+                ", totalPrice=" + totalPrice +
+                ", finished=" + finished +
+                '}';
     }
 }
