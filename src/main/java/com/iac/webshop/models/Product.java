@@ -9,7 +9,7 @@ import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -33,34 +33,34 @@ public class Product implements Serializable {
     private String description;
 
     // Implement image storage
-    @OneToOne()
+    @OneToOne(cascade = {CascadeType.ALL})
     private File image;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     private Set<OrderLine> orderLines;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     private Set<Discount> discounts;
 
     public Product() {
     }
 
-    public Optional<BigDecimal> getDiscountPrice()  {
-        if (discounts == null) {
-            return Optional.empty();
-        }
+    public BigDecimal getDiscountPrice()  {
         // Get discount price
         Date date = new Date();
-        for (Discount discount : discounts) {
-            if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
-                return Optional.of(discount.getDiscountPrice());
+        if (discounts != null) {
+            for (Discount discount : discounts) {
+                if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
+                    return discount.getDiscountPrice();
+                }
             }
         }
-        return Optional.empty();
+        return price;
     }
+
     @JsonManagedReference(value="product2OrderLine")
     public Set<OrderLine> getOrderLines() {
         return orderLines;
@@ -106,5 +106,32 @@ public class Product implements Serializable {
         if (price.compareTo(minimumPrice) < 0) {
             throw new ValidationException("Price was lower than minimum price");
         }
+    }
+    public void reduceSupply(int amount){
+        this.supply = supply - amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product )) return false;
+        return Objects.equals(id, ((Product) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 32;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", minimumPrice=" + minimumPrice +
+                ", supply=" + supply +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

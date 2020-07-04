@@ -1,13 +1,11 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.iac.webshop.helpers.ImageProvider;
 
 import javax.persistence.*;
 import java.io.IOException;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "product", "category"})
 public class File {
     @Transient
     public String fileData;

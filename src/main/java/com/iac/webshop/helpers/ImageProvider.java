@@ -4,14 +4,14 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
 public class ImageProvider {
-    public final static String rootFolder = "C://Users/Admin/Desktop/";
+    public final static String rootFolder = "C://Users/idris/Documents/troep";
 
     public static Path getFullPath(String folderName, String fileName) {
         return Paths.get(rootFolder + folderName + "/" + fileName);
