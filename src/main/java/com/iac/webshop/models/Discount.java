@@ -35,7 +35,6 @@ public class Discount {
 
     public Discount() {
     }
-
     @JsonBackReference(value="product2Discount")
     public Product getProduct() {
         return product;
