@@ -1,7 +1,9 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,11 +12,15 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
 @Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,8 +37,7 @@ public class Product implements Serializable {
     private BigDecimal price;
 
     private String description;
-
-    // Implement image storage
+  
     @OneToOne(cascade = {CascadeType.ALL})
     private File image;
 
@@ -49,13 +54,10 @@ public class Product implements Serializable {
     }
 
     public BigDecimal getDiscountPrice()  {
-        // Get discount price
-        Date date = new Date();
-        if (discounts != null) {
-            for (Discount discount : discounts) {
-                if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
-                    return discount.getDiscountPrice();
-                }
+        LocalDateTime date = LocalDateTime.now();
+        for (Discount discount : discounts) {
+            if (date.isAfter(discount.getStartDate()) || date.isBefore(discount.getEndDate())) {
+                return Optional.of(discount.getDiscountPrice());
             }
         }
         return price;
