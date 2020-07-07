@@ -10,11 +10,8 @@ import javax.persistence.*;
 import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Objects;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -54,10 +51,13 @@ public class Product implements Serializable {
     }
 
     public BigDecimal getDiscountPrice()  {
+        // Get discount price
         LocalDateTime date = LocalDateTime.now();
-        for (Discount discount : discounts) {
-            if (date.isAfter(discount.getStartDate()) || date.isBefore(discount.getEndDate())) {
-                return Optional.of(discount.getDiscountPrice());
+        if (discounts != null) {
+            for (Discount discount : discounts) {
+                if (date.isAfter(discount.getStartDate()) || date.isBefore(discount.getEndDate())) {
+                    return discount.getDiscountPrice();
+                }
             }
         }
         return price;

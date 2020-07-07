@@ -7,6 +7,7 @@ import com.iac.webshop.models.OrderLine;
 import com.iac.webshop.services.interfaces.IOrderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,20 +19,24 @@ public class OrderController {
     private ModelMapper modelMapper;
 
     @PostMapping("order/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public FinalOrderDTO createShoppingCart(@RequestBody FinalOrder finalOrder) {
         return convertFinalOrder2DTO(orderService.createShoppingCart(finalOrder));
     }
 
     @PostMapping("order/add/{finalOrderId}/product/{productId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public OrderLineDTO addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine, @PathVariable long productId) {
         return convertOrderLine2DTO(orderService.addToShoppingCart(finalOrderId, orderLine, productId));
     }
 
     @DeleteMapping("order/delete/{orderLineId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeFromShoppingCart(@PathVariable long orderLineId) {
         orderService.removeFromShoppingCart(orderLineId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("order/purchase/{finalOrderId}")
     public FinalOrderDTO purchase(@PathVariable long finalOrderId) {
         return convertFinalOrder2DTO(orderService.purchase(finalOrderId));
@@ -44,13 +49,4 @@ public class OrderController {
     private FinalOrderDTO convertFinalOrder2DTO(FinalOrder finalOrder) {
         return modelMapper.map(finalOrder, FinalOrderDTO.class);
     }
-
-    private OrderLine convertOrderLineDTO2Entity(OrderLineDTO orderLineDTO) {
-        return modelMapper.map(orderLineDTO, OrderLine.class);
-    }
-
-    private FinalOrder ConvertFinalOrderDTO2Entity(FinalOrderDTO finalOrderDTO) {
-        return modelMapper.map(finalOrderDTO, FinalOrder.class);
-    }
-
 }
