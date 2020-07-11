@@ -27,7 +27,6 @@ public class ProductController {
     public Product updateProduct(@RequestBody Product product, @PathVariable long id) {
         return productService.updateProduct(product, id);
     }
-
     @GetMapping("products")
     public List<Product> getProducts() {
         return productService.getProducts();

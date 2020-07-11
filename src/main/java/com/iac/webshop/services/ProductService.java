@@ -9,9 +9,6 @@ import com.iac.webshop.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.validation.ValidationException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 

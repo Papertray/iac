@@ -1,20 +1,23 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 
 @Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,36 +34,35 @@ public class Product implements Serializable {
     private BigDecimal price;
 
     private String description;
-
-    // Implement image storage
-    @OneToOne()
+  
+    @OneToOne(cascade = {CascadeType.ALL})
     private File image;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     private Set<OrderLine> orderLines;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     private Set<Discount> discounts;
 
     public Product() {
     }
 
-    public Optional<BigDecimal> getDiscountPrice()  {
-        if (discounts == null) {
-            return Optional.empty();
-        }
+    public BigDecimal getDiscountPrice()  {
         // Get discount price
-        Date date = new Date();
-        for (Discount discount : discounts) {
-            if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
-                return Optional.of(discount.getDiscountPrice());
+        LocalDateTime date = LocalDateTime.now();
+        if (discounts != null) {
+            for (Discount discount : discounts) {
+                if (date.isAfter(discount.getStartDate()) || date.isBefore(discount.getEndDate())) {
+                    return discount.getDiscountPrice();
+                }
             }
         }
-        return Optional.empty();
+        return price;
     }
+
     @JsonManagedReference(value="product2OrderLine")
     public Set<OrderLine> getOrderLines() {
         return orderLines;
@@ -106,5 +108,32 @@ public class Product implements Serializable {
         if (price.compareTo(minimumPrice) < 0) {
             throw new ValidationException("Price was lower than minimum price");
         }
+    }
+    public void reduceSupply(int amount){
+        this.supply = supply - amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product )) return false;
+        return Objects.equals(id, ((Product) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 32;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", minimumPrice=" + minimumPrice +
+                ", supply=" + supply +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
