@@ -44,7 +44,7 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product")
     private Set<OrderLine> orderLines;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
     private Set<Discount> discounts;
 
     public Product() {
