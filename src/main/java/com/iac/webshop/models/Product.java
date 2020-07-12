@@ -86,7 +86,6 @@ public class Product implements Serializable {
     }
 
     // Validation
-
     public void validate() {
         validateName();
         validatePrice();

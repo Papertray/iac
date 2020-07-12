@@ -28,11 +28,11 @@ public class OrderLine implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private FinalOrder finalOrder;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
     public BigDecimal getTotalPrice() {
-        return product.getDiscountPrice().multiply(BigDecimal.valueOf(amount));
+        return totalPrice;
     }
 
     @JsonBackReference(value="product2OrderLine")
@@ -63,7 +63,11 @@ public class OrderLine implements Serializable {
                 "id=" + id +
                 ", date=" + date +
                 ", amount=" + amount +
-                ", totalPrice=" + totalPrice +
+                ", totalPrice=" + getTotalPrice() +
                 '}';
+    }
+
+    public void setTotalPrice(){
+        this.totalPrice = product.getDiscountPrice().multiply(BigDecimal.valueOf(amount));
     }
 }

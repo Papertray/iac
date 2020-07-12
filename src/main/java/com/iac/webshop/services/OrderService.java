@@ -15,7 +15,6 @@ import com.iac.webshop.services.interfaces.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 @Service
@@ -39,12 +38,16 @@ public class OrderService implements IOrderService {
 
         orderLine.setFinalOrder(finalOrder);
         orderLine.setProduct(product);
-        orderLine.setTotalPrice(calculateTotalPrice(product, orderLine.getAmount()));
 
         if (!hasSupply(product.getId(), orderLine.getAmount())){
             throw new NotInStockException(orderLine.getAmount(), product.getSupply(), product.getName());
         }
-        return orderLineRepository.save(orderLine);
+
+        orderLine.setTotalPrice();
+        orderLineRepository.save(orderLine);
+        finalOrder.setTotalPrice();
+        finalOrderRepository.save(finalOrder);
+        return orderLine;
     }
 
     @Override
@@ -70,11 +73,11 @@ public class OrderService implements IOrderService {
 
     @Override
     public void removeFromShoppingCart(long orderLineId) {
+        OrderLine orderLine = orderLineRepository.findById(orderLineId).orElseThrow(() -> new NotFoundException("orderline", orderLineId));
+        FinalOrder finalOrder = orderLine.getFinalOrder();
         orderLineRepository.deleteById(orderLineId);
-    }
-
-    private BigDecimal calculateTotalPrice(Product product, long amount){
-        return product.getDiscountPrice().multiply(BigDecimal.valueOf(amount));
+        finalOrder.setTotalPrice();
+        finalOrderRepository.save(finalOrder);
     }
 
     private Boolean hasSupply(long productId, int amount) {

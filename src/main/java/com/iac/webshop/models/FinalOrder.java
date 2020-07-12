@@ -28,12 +28,16 @@ public class FinalOrder implements Serializable {
 
     private boolean finished;
 
-    private BigDecimal getPrice() {
+    public void setTotalPrice(){
         BigDecimal allPrices = BigDecimal.ZERO;
         for (OrderLine orderLine : orderLines) {
             allPrices = allPrices.add(orderLine.getTotalPrice());
         }
-        return allPrices;
+        this.totalPrice = allPrices;
+    }
+
+    public BigDecimal getTotalPrice(){
+        return totalPrice;
     }
 
     public boolean getStatus() {
@@ -62,7 +66,7 @@ public class FinalOrder implements Serializable {
         return "FinalOrder{" +
                 "id=" + id +
                 ", date=" + date +
-                ", totalPrice=" + totalPrice +
+                ", totalPrice=" + getTotalPrice() +
                 ", finished=" + finished +
                 '}';
     }
