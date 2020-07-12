@@ -48,9 +48,4 @@ public class OrderController {
         activeMQSender.send(finalOrderDTO.toString());
         return finalOrderDTO;
     }
-
-    private OrderLineDTO convertOrderLine2DTO(OrderLine orderLine) {
-        return modelMapper.map(orderLine, OrderLineDTO.class);
-    }
-
 }
