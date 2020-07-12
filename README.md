@@ -12,7 +12,8 @@ Master Branch status: </br>
 
 <li> Install Postman and download the request package here: <br/> https://app.getpostman.com/join-team?invite_code=56d992fd7292bf59f6e8df9d1d3c391b
 <li> Install Postgresql for your OS here: </br> https://www.postgresql.org/</li>
-<li> Edit the <b>application.properties</b> with your postgresql configuration and storage path along with other configuration properties as you see fit</li>
+<li> Edit the <b>application.properties</b> with your postgresql configuration along with other configuration properties as you see fit</li>
+<li> Adjust the storage path in the Image provider to whatever path you want to use
 <li> Use your favorite IDE to run Spring (using Intellij IDEA from Jetbrains means you won't have to install Tomcat seperately)
 
 <h3> Additional information </h3>
