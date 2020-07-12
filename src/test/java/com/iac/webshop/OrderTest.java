@@ -119,7 +119,7 @@ class OrderTest {
     }
 
     @Test
-    @DisplayName("Purchase succesful")
+    @DisplayName("Purchase successful")
     void purchaseSuccessful() throws Exception {
         FinalOrder finalOrder = new FinalOrder();
         Product product1 = createTestProduct("Product1", 4, 0.59);
