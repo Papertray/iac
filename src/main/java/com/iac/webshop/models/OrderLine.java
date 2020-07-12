@@ -53,11 +53,6 @@ public class OrderLine implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
     public String toString() {
         return "OrderLine{" +
                 "id=" + id +

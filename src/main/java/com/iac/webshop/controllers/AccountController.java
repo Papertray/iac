@@ -21,10 +21,9 @@ public class AccountController {
 
     @PostMapping("/accounts")
     public AccountDTO createAccount(@RequestBody Account account) {
-        Account result = accountService.createAccount(account);
-        AccountDTO convertedResult = Utils.convertToDto(result, AccountDTO.class);
-        activeMQSender.send(convertedResult.getEmail());
-        return convertedResult;
+        AccountDTO accountDTO = Utils.convertToDto(accountService.createAccount(account), AccountDTO.class);
+        activeMQSender.send(accountDTO.toString());
+        return accountDTO;
     }
 
     @GetMapping("/accounts/{id}")

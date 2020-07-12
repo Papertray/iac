@@ -9,5 +9,5 @@ public interface ICustomerService {
 
     Customer getCustomerById(long id);
 
-    void createCustomer(Customer customer);
+    Customer createCustomer(Customer customer);
 }

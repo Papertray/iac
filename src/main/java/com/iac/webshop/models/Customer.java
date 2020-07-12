@@ -53,10 +53,14 @@ public class Customer implements Serializable {
         }
     }
 
-
-
     @Override
-    public int hashCode() {
-        return 37;
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address=" + address +
+                '}';
     }
 }

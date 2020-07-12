@@ -32,8 +32,8 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public void createCustomer(Customer customer) {
+    public Customer createCustomer(Customer customer) {
         customer.validate();
-        customerRepository.save(customer);
+        return customerRepository.save(customer);
     }
 }
