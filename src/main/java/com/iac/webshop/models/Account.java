@@ -53,8 +53,8 @@ public class Account {
         if (password == null) {
             throw new ValidationException("Password is required");
         }
-        if (password.length() < 6) {
-            throw new ValidationException("Password must be at least 6 characters long");
+        if (password.length() < 8) {
+            throw new ValidationException("Password must be at least 8 characters long");
         }
         if (hashedPassword == null) {
             throw new ValidationException("Password could not be hashed");
