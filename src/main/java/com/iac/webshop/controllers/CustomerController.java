@@ -18,15 +18,15 @@ public class CustomerController {
     @Autowired
     ActiveMQSender activeMQSender;
 
-    @RequestMapping("/{id}")
-    public List<Customer> getCustomers(@PathVariable String id) {
+    @GetMapping("/customers")
+    public List<Customer> getCustomers() {
         return customerService.getCustomers();
     }
 
-    @GetMapping("/customer/{id}")
+    @GetMapping("/customers/{id}")
     public Customer getCostumerByID(@PathVariable long id) { return customerService.getCustomerById(id);}
 
-    @PostMapping("/customer")
+    @PostMapping("/customers")
     public Customer setCustomer(@RequestBody Customer customer) {
         Customer newCustomer = customerService.createCustomer(customer);
         activeMQSender.send(newCustomer.toString());

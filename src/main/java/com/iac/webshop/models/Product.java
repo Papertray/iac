@@ -89,6 +89,7 @@ public class Product implements Serializable {
     public void validate() {
         validateName();
         validatePrice();
+        validateSupply();
     }
 
     public void validateName() throws ValidationException {
@@ -108,6 +109,14 @@ public class Product implements Serializable {
             throw new ValidationException("Price was lower than minimum price");
         }
     }
+
+    public void validateSupply() throws ValidationException {
+        if (supply < 0) {
+            throw new ValidationException("Supply can not be negative");
+        }
+    }
+
+
     public void reduceSupply(int amount){
         this.supply = supply - amount;
     }

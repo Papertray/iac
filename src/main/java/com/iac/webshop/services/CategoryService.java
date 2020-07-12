@@ -1,6 +1,7 @@
 package com.iac.webshop.services;
 
 import com.iac.webshop.models.Category;
+import com.iac.webshop.models.Product;
 import com.iac.webshop.repositories.ICategoryRepository;
 import com.iac.webshop.repositories.IProductRepository;
 import com.iac.webshop.services.interfaces.ICategoryService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,11 @@ public class CategoryService implements ICategoryService {
     public Category createCategory(Category category) {
         fileManager.saveFileDB(category.getImage());
         return categoryRepository.save(category);
+    }
+
+    @Override
+    public List<Category> getCategories() {
+        return categoryRepository.findAll();
     }
 
     @Override

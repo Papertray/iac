@@ -84,4 +84,28 @@ class ProductTest {
         }
     }
 
+    @Test
+    @DisplayName("Set invalid supply")
+    void setInvalidSupply() {
+        Product product = new Product();
+        int supply = -10;
+        product.setSupply(supply);
+        try {
+            product.validateSupply();
+            fail("Should not have validated");
+        } catch(ValidationException e) {
+            assertEquals(e.getMessage(), "Supply can not be negative");
+        }
+    }
+
+    @Test
+    @DisplayName("Set valid supply")
+    void setValidSupply() {
+        Product product = new Product();
+        int supply = 10;
+        product.setSupply(supply);
+        assertDoesNotThrow(product::validateSupply);
+        assertEquals(supply, product.getSupply());
+    }
+
 }
