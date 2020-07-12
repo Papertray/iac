@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -36,7 +37,31 @@ public class Address implements Serializable {
     public Address() {
     }
 
-    @JsonManagedReference(value="address2Customer")
+    public void validate() {
+        boolean[] validationRules = new boolean[]{
+                (this.country.length() > 0),
+                (this.city.length() > 0),
+                (this.postalCode.length() > 0),
+                (this.state.length() > 0),
+                (this.street.length() > 0)
+        };
+
+        String[] validationMessages = new String[]{
+                "Country is empty",
+                "City is empty",
+                "Postal code is empty",
+                "State is empty",
+                "Street is empty"
+        };
+
+        for (int i = 0; i < validationRules.length; i++) {
+            if (!validationRules[i]) {
+                throw new ValidationException(validationMessages[i]);
+            }
+        }
+    }
+
+    @JsonManagedReference(value = "address2Customer")
     public Set<Customer> getCustomers() {
         return customers;
     }
