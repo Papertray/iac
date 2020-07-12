@@ -16,8 +16,8 @@ Master Branch status: </br>
 <li> Install Postgresql for your OS here: </br> https://www.postgresql.org/</li>
 <li> Edit the <b>application.properties</b> with your postgresql configuration and storage path along with other configuration properties as you see fit</li>
 
-<h3> Additional information <h3>
-Check the following linke for more information: </br>
+<h3> Additional information </h3>
+Check the following link for more information: </br>
 https://drive.google.com/drive/folders/1evd_nVxIZMep5eZjhFffnteRM6_SI4s1?usp=sharing
   
 Thanks for taking your time to check this project!
