@@ -1,5 +1,8 @@
 package com.iac.webshop;
 
+import com.iac.webshop.exceptions.EmptyShoppingCartException;
+import com.iac.webshop.exceptions.NotInStockException;
+import com.iac.webshop.exceptions.OrderAlreadyBoughtException;
 import com.iac.webshop.helpers.Utils;
 import com.iac.webshop.models.Account;
 import com.iac.webshop.models.FinalOrder;
@@ -71,6 +74,64 @@ class OrderTest {
         BigDecimal totalPrice = orderLine1.getTotalPrice().add(orderLine2.getTotalPrice());
         // Check if total price of final order works correctly
         assertEquals(finalOrder.getTotalPrice(), totalPrice);
+    }
+
+    @Test
+    @DisplayName("Purchase empty shopping cart")
+    void purchaseEmptyShoppingCart() throws Exception {
+        FinalOrder finalOrder = new FinalOrder();
+        try {
+            finalOrder.purchase();
+            fail("Should not have been able to purchase this");
+        } catch(Exception e) {
+            assertTrue(e instanceof EmptyShoppingCartException);
+        }
+    }
+
+    @Test
+    @DisplayName("Purchase already purchased order")
+    void purchaseAlreadyPurchasedOrder() throws Exception {
+        FinalOrder finalOrder = new FinalOrder();
+        Product product = createTestProduct("Product", 100, 0.59);
+        finalOrder.addOrderLine(createTestOrderLine(product, 5));
+        finalOrder.setFinished(true);
+        try {
+            finalOrder.purchase();
+            fail("Should not have been able to purchase this");
+        } catch(Exception e) {
+            assertTrue(e instanceof OrderAlreadyBoughtException);
+        }
+    }
+
+    @Test
+    @DisplayName("Purchase product that does not have enough supply")
+    void purchaseProductsThatIsNotInStock() throws Exception {
+        FinalOrder finalOrder = new FinalOrder();
+        Product product = createTestProduct("Product", 4, 0.59);
+        OrderLine orderLine = createTestOrderLine(product, 5);
+        finalOrder.addOrderLine(orderLine);
+        try {
+            finalOrder.purchase();
+            fail("Should not have been able to purchase this");
+        } catch(Exception e) {
+            assertEquals(e.getMessage(), new NotInStockException(orderLine.getAmount(), product.getSupply(), product.getName()).getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Purchase succesful")
+    void purchaseSuccessful() throws Exception {
+        FinalOrder finalOrder = new FinalOrder();
+        Product product1 = createTestProduct("Product1", 4, 0.59);
+        Product product2 = createTestProduct("Product2", 2, 1.59);
+        OrderLine orderLine1 = createTestOrderLine(product1, 2);
+        OrderLine orderLine2 = createTestOrderLine(product2, 2);
+        finalOrder.addOrderLine(orderLine1);
+        finalOrder.addOrderLine(orderLine2);
+
+        assertDoesNotThrow(finalOrder::purchase);
+        assertEquals(product1.getSupply(), 2);
+        assertEquals(product2.getSupply(), 0);
     }
 
     OrderLine createTestOrderLine(Product product, int amount) {

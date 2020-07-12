@@ -52,22 +52,8 @@ public class OrderService implements IOrderService {
 
     @Override
     public FinalOrder purchase(long finalOrderId) {
-
         FinalOrder finalOrder = finalOrderRepository.findById(finalOrderId).orElseThrow(() -> new NotFoundException("FinalOrder", finalOrderId));
-        //Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer", customerId));
-        if (finalOrder.getStatus()) throw new OrderAlreadyBoughtException(finalOrderId);
-            Set<OrderLine> orderLines = finalOrder.getOrderLines();
-            if  (orderLines.size() == 0) throw new EmptyShoppingCartException(finalOrderId);
-
-            for (OrderLine orderLine : orderLines) {
-                if (!hasSupply(orderLine.getProduct().getId(), orderLine.getAmount()))
-                    throw new NotInStockException(orderLine.getAmount(), orderLine.getProduct().getSupply(), orderLine.getProduct().getName());
-                orderLine.getProduct().reduceSupply(orderLine.getAmount());
-            }
-
-            //TODO: check if NAW is complete (need method from customer branch)
-            //TODO: accept payment method (unsure)
-            finalOrder.setFinished(true);
+        finalOrder.purchase();
         return finalOrderRepository.save(finalOrder);
     }
 
