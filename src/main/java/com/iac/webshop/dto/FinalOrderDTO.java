@@ -11,4 +11,17 @@ public class FinalOrderDTO {
     LocalDateTime date;
     BigDecimal totalPrice;
     boolean finished;
+
+    @Override
+    public String toString() {
+        return "FinalOrderDTO{" +
+                "id=" + id +
+                ", date=" + date +
+                ", totalPrice=" + totalPrice +
+                ", finished=" + finished +
+                '}';
+    }
+
 }
+
+

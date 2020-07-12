@@ -4,6 +4,7 @@ import com.iac.webshop.dto.FinalOrderDTO;
 import com.iac.webshop.dto.OrderLineDTO;
 import com.iac.webshop.models.FinalOrder;
 import com.iac.webshop.models.OrderLine;
+import com.iac.webshop.services.ActiveMQSender;
 import com.iac.webshop.services.interfaces.IOrderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     @Autowired
     IOrderService orderService;
+
+    @Autowired
+    ActiveMQSender activeMQSender;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -39,7 +43,9 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("order/purchase/{finalOrderId}")
     public FinalOrderDTO purchase(@PathVariable long finalOrderId) {
-        return convertFinalOrder2DTO(orderService.purchase(finalOrderId));
+        FinalOrderDTO finalOrderDTO = convertFinalOrder2DTO(orderService.purchase(finalOrderId));
+        activeMQSender.send(finalOrderDTO.toString());
+        return finalOrderDTO;
     }
 
     private OrderLineDTO convertOrderLine2DTO(OrderLine orderLine) {
