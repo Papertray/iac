@@ -51,11 +51,10 @@ public class Product implements Serializable {
     }
 
     public BigDecimal getDiscountPrice()  {
-        // Get discount price
         LocalDateTime date = LocalDateTime.now();
         if (discounts != null) {
             for (Discount discount : discounts) {
-                if (date.isAfter(discount.getStartDate()) || date.isBefore(discount.getEndDate())) {
+                if (date.isAfter(discount.getStartDate()) && date.isBefore(discount.getEndDate())) {
                     return discount.getDiscountPrice();
                 }
             }
