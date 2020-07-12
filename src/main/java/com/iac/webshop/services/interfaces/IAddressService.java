@@ -1,8 +1,8 @@
 package com.iac.webshop.services.interfaces;
 
-import com.iac.webshop.models.Account;
+import com.iac.webshop.models.Address;
 
 public interface IAddressService {
-    Account getAccount();
-
+    Address createAddress(Address address);
+    Address getAddressById(long id);
 }

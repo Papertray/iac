@@ -1,13 +1,16 @@
 package com.iac.webshop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "products"})
+@Data
+// @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "products"})
 public class Category implements Serializable {
 
     @Id
@@ -19,11 +22,11 @@ public class Category implements Serializable {
 
     private String description;
 
-    // Implement image storage
-    private long image;
+    @OneToOne(fetch = FetchType.LAZY)
+    private File image;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private Set<Product> products;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Product> products = new HashSet<>();
 
     public String getName() {
         return name;
@@ -32,26 +35,7 @@ public class Category implements Serializable {
     public Category() {
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getImage() {
-        return image;
-    }
-
-    public void setImage(long image) {
-        this.image = image;
-    }
-
+    @JsonManagedReference(value="product2Category")
     public Set<Product> getProducts() {
         return products;
     }

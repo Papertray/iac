@@ -1,10 +1,16 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class Address {
+@Data
+@Table(name = "address")
+public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,5 +34,10 @@ public class Address {
     private Set<Customer> customers;
 
     public Address() {
+    }
+
+    @JsonManagedReference(value="address2Customer")
+    public Set<Customer> getCustomers() {
+        return customers;
     }
 }

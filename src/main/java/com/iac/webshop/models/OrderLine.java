@@ -1,18 +1,26 @@
 package com.iac.webshop.models;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.sql.Date;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+
+@Data
 @Entity
-public class OrderLine {
+@Table(name = "order_line")
+public class OrderLine implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date date;
+    private LocalDateTime date;
 
-    private BigDecimal amount;
+    private int amount;
 
     @Column(nullable = false)
     private BigDecimal totalPrice;
@@ -20,13 +28,42 @@ public class OrderLine {
     @ManyToOne(fetch = FetchType.LAZY)
     private FinalOrder finalOrder;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private Product product;
 
-    public OrderLine() {
+    public BigDecimal getTotalPrice() {
+        return product.getDiscountPrice().multiply(BigDecimal.valueOf(amount));
     }
 
-    public BigDecimal getPrice() {
-        return product.getPrice().multiply(amount);
+    @JsonBackReference(value="product2OrderLine")
+    public Product getProduct() {
+        return product;
+    }
+
+    @JsonBackReference(value="finalOrder2OrderLine")
+    public FinalOrder getFinalOrder() {
+        return finalOrder;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrderLine )) return false;
+        return Objects.equals(id, ((OrderLine) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderLine{" +
+                "id=" + id +
+                ", date=" + date +
+                ", amount=" + amount +
+                ", totalPrice=" + totalPrice +
+                '}';
     }
 }

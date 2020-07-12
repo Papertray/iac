@@ -1,19 +1,31 @@
 package com.iac.webshop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.Data;
+
 import javax.persistence.*;
-import javax.xml.bind.ValidationException;
+import javax.validation.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
+
+@Data
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private BigDecimal minimumPrice = BigDecimal.ZERO;
+
+    private int supply;
 
     @Column(nullable = false)
     private String name;
@@ -22,73 +34,106 @@ public class Product implements Serializable {
     private BigDecimal price;
 
     private String description;
+  
+    @OneToOne(cascade = {CascadeType.ALL})
+    private File image;
 
-    // Implement image storage
-    private long image;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     private Set<OrderLine> orderLines;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
     private Set<Discount> discounts;
 
     public Product() {
     }
 
-    public BigDecimal getPrice() {
+    public BigDecimal getDiscountPrice()  {
         // Get discount price
-        Date date = new Date();
-        for (Discount discount : discounts) {
-            if (date.after(discount.getStartDate()) || date.before(discount.getEndDate())) {
-                return discount.getDiscountPrice();
+        LocalDateTime date = LocalDateTime.now();
+        if (discounts != null) {
+            for (Discount discount : discounts) {
+                if (date.isAfter(discount.getStartDate()) || date.isBefore(discount.getEndDate())) {
+                    return discount.getDiscountPrice();
+                }
             }
         }
-
         return price;
     }
 
-    public void setPrice(BigDecimal price) throws ValidationException {
-        if (price.scale() != 2) {
-            throw new ValidationException("Two numbers after decimal expected");
-        }
-        if (price.compareTo(minimumPrice) < 0) {
-            throw new ValidationException("Price lower than minimum price");
-        }
-        this.price = price;
+    @JsonManagedReference(value="product2OrderLine")
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
     }
 
-    public String getName() {
-        return name;
+    @JsonManagedReference(value="product2Discount")
+    public Set<Discount> getDiscounts() {
+        return discounts;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getImage() {
-        return image;
-    }
-
-    public void setImage(long image) {
-        this.image = image;
-    }
-
+    @JsonBackReference(value="product2Category")
     public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void copyFrom(Product product) {
+        setName(product.getName());
+        setPrice(product.getPrice());
+        setDescription(product.getDescription());
+        setImage(product.getImage());
+    }
+
+    // Validation
+
+    public void validate() {
+        validateName();
+        validatePrice();
+    }
+
+    public void validateName() throws ValidationException {
+
+        if (name.isEmpty()) {
+            throw new ValidationException("Name can not be empty");
+        }
+    }
+
+    public void validatePrice() throws ValidationException {
+
+        if (price.scale() != 2) {
+            throw new ValidationException("Price must have two decimals");
+        }
+
+        if (price.compareTo(minimumPrice) < 0) {
+            throw new ValidationException("Price was lower than minimum price");
+        }
+    }
+    public void reduceSupply(int amount){
+        this.supply = supply - amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product )) return false;
+        return Objects.equals(id, ((Product) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 32;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", minimumPrice=" + minimumPrice +
+                ", supply=" + supply +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
