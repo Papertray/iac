@@ -1,5 +1,9 @@
 package com.iac.webshop.helpers;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
@@ -7,7 +11,13 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Base64;
 
+@Component
 public class Utils {
+    public static ModelMapper modelMapper;
+
+    public Utils() {
+        modelMapper = new ModelMapper();
+    }
 
     public static String hashPassword (String password) {
 
@@ -32,5 +42,9 @@ public class Utils {
 
     public static Boolean isValidEmail(String email) {
         return email.matches("^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$");
+    }
+
+    public static <C, T> C convertToDto(T obj, Class<C> target) {
+        return modelMapper.map(obj, target);
     }
 }

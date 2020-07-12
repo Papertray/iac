@@ -1,5 +1,7 @@
 package com.iac.webshop.controllers;
 
+import com.iac.webshop.dto.AccountDTO;
+import com.iac.webshop.helpers.Utils;
 import com.iac.webshop.models.Account;
 import com.iac.webshop.services.ActiveMQSender;
 import com.iac.webshop.services.interfaces.IAccountService;
@@ -18,10 +20,11 @@ public class AccountController {
     ActiveMQSender activeMQSender;
 
     @PostMapping("/accounts")
-    public Account createAccount(@RequestBody Account account) {
+    public AccountDTO createAccount(@RequestBody Account account) {
         Account result = accountService.createAccount(account);
-        activeMQSender.send(result.getEmail());
-        return result;
+        AccountDTO convertedResult = Utils.convertToDto(result, AccountDTO.class);
+        activeMQSender.send(convertedResult.getEmail());
+        return convertedResult;
     }
 
     @GetMapping("/accounts/{id}")
