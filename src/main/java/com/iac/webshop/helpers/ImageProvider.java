@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 @Service
 public class ImageProvider {
-    public final static String rootFolder = "C://Users/idris/Documents/troep";
+    public final static String rootFolder = "C://Users/Boris Blom/Desktop/troep";
 
     public static Path getFullPath(String folderName, String fileName) {
         return Paths.get(rootFolder + folderName + "/" + fileName);

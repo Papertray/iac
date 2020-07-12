@@ -39,4 +39,16 @@ public class Discount {
     public Product getProduct() {
         return product;
     }
+
+    @Override
+    public String toString() {
+        return "Discount{" +
+                "id=" + id +
+                ", discountPrice=" + discountPrice +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", description='" + description + '\'' +
+                ", product=" + product +
+                '}';
+    }
 }

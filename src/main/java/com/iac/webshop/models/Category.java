@@ -43,4 +43,15 @@ public class Category implements Serializable {
     public void setProducts(Set<Product> products) {
         this.products = products;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", image=" + image +
+                ", products=" + products +
+                '}';
+    }
 }

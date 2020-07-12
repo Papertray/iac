@@ -65,4 +65,17 @@ public class Address implements Serializable {
     public Set<Customer> getCustomers() {
         return customers;
     }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", country='" + country + '\'' +
+                ", customers=" + customers +
+                '}';
+    }
 }

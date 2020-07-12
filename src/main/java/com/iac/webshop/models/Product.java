@@ -120,11 +120,6 @@ public class Product implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return 32;
-    }
-
-    @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +

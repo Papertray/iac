@@ -1,6 +1,7 @@
 package com.iac.webshop.controllers;
 
 import com.iac.webshop.models.Product;
+import com.iac.webshop.services.ActiveMQSender;
 import com.iac.webshop.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,14 @@ public class ProductController {
 
     @Autowired
     IProductService productService;
+    @Autowired
+    ActiveMQSender activeMQSender;
 
     @PostMapping("products")
     public Product addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+        Product newProduct = productService.addProduct(product);
+        activeMQSender.send(newProduct.toString());
+        return newProduct;
     }
 
     @GetMapping("products/{id}")

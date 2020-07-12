@@ -12,4 +12,16 @@ public class OrderLineDTO {
     BigDecimal totalPrice;
     long finalOrderID;
     long productID;
+
+    @Override
+    public String toString() {
+        return "OrderLineDTO{" +
+                "id=" + id +
+                ", date=" + date +
+                ", amount=" + amount +
+                ", totalPrice=" + totalPrice +
+                ", finalOrderID=" + finalOrderID +
+                ", productID=" + productID +
+                '}';
+    }
 }

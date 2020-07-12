@@ -26,13 +26,17 @@ public class OrderController {
     @PostMapping("order/create")
     @ResponseStatus(HttpStatus.CREATED)
     public FinalOrderDTO createShoppingCart(@RequestBody FinalOrder finalOrder) {
-        return Utils.convertToDto(orderService.createShoppingCart(finalOrder), FinalOrderDTO.class);
+        FinalOrderDTO finalOrderDTO = Utils.convertToDto(orderService.createShoppingCart(finalOrder), FinalOrderDTO.class);
+        activeMQSender.send(finalOrderDTO.toString());
+        return finalOrderDTO;
     }
 
     @PostMapping("order/add/{finalOrderId}/product/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderLineDTO addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine, @PathVariable long productId) {
-        return Utils.convertToDto(orderService.addToShoppingCart(finalOrderId, orderLine, productId), OrderLineDTO.class);
+        OrderLineDTO orderLineDTO = Utils.convertToDto(orderService.addToShoppingCart(finalOrderId, orderLine, productId), OrderLineDTO.class);
+        activeMQSender.send(orderLineDTO.toString());
+        return orderLineDTO;
     }
 
     @DeleteMapping("order/delete/{orderLineId}")
