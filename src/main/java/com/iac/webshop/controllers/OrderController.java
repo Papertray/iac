@@ -2,6 +2,7 @@ package com.iac.webshop.controllers;
 
 import com.iac.webshop.dto.FinalOrderDTO;
 import com.iac.webshop.dto.OrderLineDTO;
+import com.iac.webshop.helpers.Utils;
 import com.iac.webshop.models.FinalOrder;
 import com.iac.webshop.models.OrderLine;
 import com.iac.webshop.services.ActiveMQSender;
@@ -25,13 +26,13 @@ public class OrderController {
     @PostMapping("order/create")
     @ResponseStatus(HttpStatus.CREATED)
     public FinalOrderDTO createShoppingCart(@RequestBody FinalOrder finalOrder) {
-        return convertFinalOrder2DTO(orderService.createShoppingCart(finalOrder));
+        return Utils.convertToDto(orderService.createShoppingCart(finalOrder), FinalOrderDTO.class);
     }
 
     @PostMapping("order/add/{finalOrderId}/product/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderLineDTO addToShoppingCart(@PathVariable long finalOrderId, @RequestBody OrderLine orderLine, @PathVariable long productId) {
-        return convertOrderLine2DTO(orderService.addToShoppingCart(finalOrderId, orderLine, productId));
+        return Utils.convertToDto(orderService.addToShoppingCart(finalOrderId, orderLine, productId), OrderLineDTO.class);
     }
 
     @DeleteMapping("order/delete/{orderLineId}")
@@ -43,7 +44,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("order/purchase/{finalOrderId}")
     public FinalOrderDTO purchase(@PathVariable long finalOrderId) {
-        FinalOrderDTO finalOrderDTO = convertFinalOrder2DTO(orderService.purchase(finalOrderId));
+        FinalOrderDTO finalOrderDTO = Utils.convertToDto(orderService.purchase(finalOrderId), FinalOrderDTO.class);
         activeMQSender.send(finalOrderDTO.toString());
         return finalOrderDTO;
     }
@@ -52,7 +53,4 @@ public class OrderController {
         return modelMapper.map(orderLine, OrderLineDTO.class);
     }
 
-    private FinalOrderDTO convertFinalOrder2DTO(FinalOrder finalOrder) {
-        return modelMapper.map(finalOrder, FinalOrderDTO.class);
-    }
 }
