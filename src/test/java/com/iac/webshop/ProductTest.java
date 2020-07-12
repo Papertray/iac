@@ -1,5 +1,6 @@
 package com.iac.webshop;
 
+import com.iac.webshop.models.Discount;
 import com.iac.webshop.models.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

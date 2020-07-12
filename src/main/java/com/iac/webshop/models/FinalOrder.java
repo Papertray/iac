@@ -50,10 +50,12 @@ public class FinalOrder implements Serializable {
     public void removeOrderLine (OrderLine orderLine) {
         orderLines.remove(orderLine);
         orderLine.setFinalOrder(null);
+        setTotalPrice();
     }
     public void addOrderLine (OrderLine orderLine) {
         orderLines.add(orderLine);
         orderLine.setFinalOrder(this);
+        setTotalPrice();
     }
 
     @JsonManagedReference(value="finalOrder2OrderLine")
