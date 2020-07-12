@@ -48,6 +48,18 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public Product updateProductWithCategory(Product product, long id, long categoryId) {
+        product.validate();
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        categoryOptional.ifPresent(category -> product.setCategory(category));
+        return productRepository.findById(id)
+                .map(existingProduct -> {
+                    product.setId(id);
+                    return productRepository.save(product);
+                }).orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    @Override
     public Product getProductById(long id) {
         return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
     }

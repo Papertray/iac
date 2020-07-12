@@ -10,6 +10,7 @@ public interface IProductService {
     Product addProduct(Product product);
 
     Product updateProduct(Product product, long id);
+    Product updateProductWithCategory(Product product, long id, long categoryId);
 
     Product getProductById(long id);
 }

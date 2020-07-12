@@ -32,6 +32,11 @@ public class ProductController {
     public Product updateProduct(@RequestBody Product product, @PathVariable long id) {
         return productService.updateProduct(product, id);
     }
+
+    @PutMapping("products/{id}/category/{categoryId}")
+    public Product updateProduct(@RequestBody Product product, @PathVariable long id, @PathVariable long categoryId) {
+        return productService.updateProductWithCategory(product, id, categoryId);
+    }
     @GetMapping("products")
     public List<Product> getProducts() {
         return productService.getProducts();
