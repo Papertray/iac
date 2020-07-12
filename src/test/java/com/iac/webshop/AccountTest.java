@@ -42,7 +42,7 @@ class AccountTest {
     @DisplayName("Set valid password")
     void setValidPassword() {
         Account account = new Account();
-        String password = "qwerty";
+        String password = "qwerty12";
 
         String hashedPassword = Utils.hashPassword(password);
         account.setPassword(password);
@@ -65,7 +65,7 @@ class AccountTest {
             account.validatePassword();
             fail("Should not have validated");
         } catch(ValidationException e) {
-            assertEquals(e.getMessage(), "Password must be at least 6 characters long");
+            assertEquals(e.getMessage(), "Password must be at least 8 characters long");
         }
     }
 
