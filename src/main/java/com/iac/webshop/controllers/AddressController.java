@@ -14,7 +14,7 @@ public class AddressController {
     @Autowired
     ActiveMQSender activeMQSender;
 
-    @PostMapping("/address")
+    @PostMapping("/addresses")
     public Address createAddress(@RequestBody Address address)
     {
         Address newAddress = addressService.createAddress(address);
@@ -22,7 +22,7 @@ public class AddressController {
         return newAddress;
     }
 
-    @GetMapping("/address/{id}")
+    @GetMapping("/addresses/{id}")
     public Address getAddressById(@PathVariable long id) {
         return addressService.getAddressById(id);
     }
