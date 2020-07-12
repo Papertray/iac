@@ -1,6 +1,9 @@
 package com.iac.webshop.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.iac.webshop.exceptions.EmptyShoppingCartException;
+import com.iac.webshop.exceptions.NotInStockException;
+import com.iac.webshop.exceptions.OrderAlreadyBoughtException;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -50,10 +53,24 @@ public class FinalOrder implements Serializable {
     public void removeOrderLine (OrderLine orderLine) {
         orderLines.remove(orderLine);
         orderLine.setFinalOrder(null);
+        setTotalPrice();
     }
     public void addOrderLine (OrderLine orderLine) {
         orderLines.add(orderLine);
         orderLine.setFinalOrder(this);
+        setTotalPrice();
+    }
+
+    public void purchase() {
+        if (getStatus()) throw new OrderAlreadyBoughtException(id);
+        if  (orderLines.size() == 0) throw new EmptyShoppingCartException(id);
+
+        for (OrderLine orderLine : orderLines) {
+            if (orderLine.getProduct().getSupply() < orderLine.getAmount())
+                throw new NotInStockException(orderLine.getAmount(), orderLine.getProduct().getSupply(), orderLine.getProduct().getName());
+            orderLine.getProduct().reduceSupply(orderLine.getAmount());
+        }
+        setFinished(true);
     }
 
     @JsonManagedReference(value="finalOrder2OrderLine")
